@@ -55,7 +55,7 @@ export function NosotrosPorQue() {
               >
                 <Card className="h-full">
                   <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold text-calypso mb-3">{razon.title}</h3>
+                    <h3 className="text-xl font-semibold text-calypso mb-3 text-center">{razon.title}</h3>
                     <p className="text-muted-foreground">{razon.description}</p>
                   </CardContent>
                 </Card>
