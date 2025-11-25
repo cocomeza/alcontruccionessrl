@@ -138,6 +138,10 @@ export function ImageLightbox({ images, initialIndex = 0, onClose, title }: Imag
               height={800}
               className="max-w-full max-h-[90vh] object-contain"
               priority
+              unoptimized={images[currentIndex]?.includes('supabase.co')}
+              onError={(e) => {
+                console.error('Error cargando imagen en lightbox:', images[currentIndex])
+              }}
             />
           </motion.div>
         </div>

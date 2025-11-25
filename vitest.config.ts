@@ -8,6 +8,12 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./tests/setup.ts'],
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.next/**',
+      '**/tests/e2e/**', // Excluir tests E2E (son para Playwright)
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -16,6 +22,7 @@ export default defineConfig({
         'tests/',
         '**/*.config.*',
         '**/types/**',
+        '**/tests/e2e/**',
       ],
     },
   },

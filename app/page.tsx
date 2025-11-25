@@ -1,9 +1,9 @@
-import { Header } from '@/components/header'
-import { Footer } from '@/components/footer'
+import { Header } from '@/components/layout/header'
+import { Footer } from '@/components/layout/footer'
 import { getObras } from '@/lib/actions/obras'
-import { HomeHero } from '@/components/home-hero'
-import { ObrasDestacadas } from '@/components/obras-destacadas'
-import { SeccionesRapidas } from '@/components/secciones-rapidas'
+import { HomeHero } from '@/components/home/home-hero'
+import { ObrasDestacadas } from '@/components/obra/obras-destacadas'
+import { SeccionesRapidas } from '@/components/home/secciones-rapidas'
 
 export const metadata = {
   title: "ALCONSTRUCCIONES SRL - Inicio",

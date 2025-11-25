@@ -1,4 +1,4 @@
-import { ObraFormImproved } from '@/components/obra-form-improved'
+import { ObraFormImproved } from '@/components/obra/obra-form-improved'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 

@@ -94,6 +94,8 @@ npm start
 
 ## 🧪 Testing
 
+El proyecto incluye una suite completa de tests automatizados:
+
 ### Tests Unitarios e Integración (Vitest)
 ```bash
 # Ejecutar tests en modo watch
@@ -106,35 +108,147 @@ npm run test:unit
 npm run test -- --coverage
 ```
 
+**Cobertura actual**: 84 tests pasando ✅
+- Unit tests: Componentes, schemas, utils
+- Integration tests: Auth, obras, UI components
+- Snapshot tests: Componentes visuales
+
 ### Tests E2E (Playwright)
 ```bash
-# Ejecutar tests E2E
+# Ejecutar tests E2E (requiere servidor corriendo)
 npm run test:e2e
 
-# Ejecutar con UI
+# Ejecutar con UI interactiva
 npm run test:e2e:ui
 ```
+
+**Tests E2E incluidos**:
+- Flujo completo de login y CRUD
+- Accesibilidad (axe-core)
+- Performance
+- Responsive design
+- Cross-browser
+- Visual regression
+
+> 📝 **Nota**: Los tests fueron actualizados para reflejar la nueva estructura organizada de componentes.
 
 ## 📁 Estructura del Proyecto
 
 ```
 ├── app/                    # Rutas de Next.js (App Router)
 │   ├── admin/             # Rutas del panel admin
+│   │   ├── dashboard/     # Dashboard del admin
+│   │   ├── login/         # Login del admin
+│   │   └── obras/         # CRUD de obras
+│   ├── contacto/          # Página de contacto
+│   ├── nosotros/          # Página sobre nosotros
 │   ├── obra/              # Detalle de obra (público)
 │   └── obras/             # Listado de obras (público)
-├── components/            # Componentes React
-│   └── ui/                # Componentes shadcn/ui
-├── lib/                   # Utilidades y helpers
+├── components/            # Componentes React organizados por funcionalidad
+│   ├── admin/             # Componentes específicos del admin
+│   │   ├── admin-link-client.tsx
+│   │   ├── admin-loading.tsx
+│   │   └── delete-button.tsx
+│   ├── common/            # Componentes reutilizables
+│   │   ├── error-boundary.tsx
+│   │   ├── pagination.tsx
+│   │   ├── search-filter.tsx
+│   │   ├── category-filter.tsx
+│   │   └── uploader.tsx
+│   ├── contact/           # Componentes de contacto
+│   │   ├── contact-form.tsx
+│   │   ├── contact-hero.tsx
+│   │   └── contact-info.tsx
+│   ├── home/              # Componentes del home
+│   │   ├── home-hero.tsx
+│   │   └── secciones-rapidas.tsx
+│   ├── layout/            # Componentes de layout
+│   │   ├── footer.tsx
+│   │   ├── header.tsx
+│   │   ├── logo.tsx
+│   │   ├── mobile-menu.tsx
+│   │   ├── theme-provider.tsx
+│   │   └── theme-toggle.tsx
+│   ├── nosotros/          # Componentes de "nosotros"
+│   │   ├── nosotros-equipo.tsx
+│   │   ├── nosotros-hero.tsx
+│   │   ├── nosotros-historia.tsx
+│   │   ├── nosotros-porque.tsx
+│   │   └── nosotros-valores.tsx
+│   ├── obra/              # Componentes relacionados con obras
+│   │   ├── image-gallery.tsx
+│   │   ├── image-lightbox.tsx
+│   │   ├── obra-card.tsx
+│   │   ├── obra-card-skeleton.tsx
+│   │   ├── obra-detail-content.tsx
+│   │   ├── obra-form-improved.tsx
+│   │   └── obras-destacadas.tsx
+│   └── ui/                # Componentes UI base (shadcn/ui)
+│       ├── alert.tsx
+│       ├── button.tsx
+│       ├── card.tsx
+│       └── ...
+├── lib/                   # Utilidades y lógica de negocio
 │   ├── actions/           # Server Actions
-│   ├── supabase/          # Clientes Supabase
+│   │   ├── auth.ts
+│   │   ├── contact.ts
+│   │   ├── obras.ts
+│   │   └── upload.ts
+│   ├── schemas/           # Schemas de validación (Zod)
+│   │   └── obra.ts
+│   ├── supabase/          # Clientes de Supabase
+│   │   ├── client.ts
+│   │   ├── middleware.ts
+│   │   └── server.ts
 │   ├── types/             # Tipos TypeScript
+│   │   └── database.ts
 │   └── utils/             # Funciones utilitarias
-├── tests/                 # Tests
+│       ├── cn.ts
+│       ├── compress.ts
+│       ├── error-handler.ts
+│       ├── storage.ts
+│       └── upload.ts
+├── tests/                 # Suite de tests automatizados
 │   ├── e2e/               # Tests E2E (Playwright)
+│   │   ├── accessibility.spec.ts
+│   │   ├── complete-workflow.spec.ts
+│   │   ├── login-flow.spec.ts
+│   │   └── ...
 │   ├── integration/       # Tests de integración
+│   │   ├── auth.test.ts
+│   │   ├── obras.test.ts
+│   │   └── ui-components.test.tsx
+│   ├── snapshot/          # Snapshot tests
 │   └── unit/              # Tests unitarios
+│       ├── components/
+│       ├── schemas/
+│       ├── types/
+│       └── utils/
+├── supabase/              # Scripts SQL para Supabase
+│   ├── setup.sql
+│   ├── storage-policies.sql
+│   └── categorias.sql
+├── docs/                  # Documentación del proyecto
+│   ├── CAMBIOS-TESTS.md
+│   ├── ESTRUCTURA-PROYECTO.md
+│   └── MEJORAS-IMPLEMENTADAS.md
 └── public/                # Archivos estáticos
+    ├── logo.png
+    └── hero-background.jpg
 ```
+
+### 🗂️ Organización de Componentes
+
+Los componentes están organizados por funcionalidad para facilitar la navegación y el mantenimiento:
+
+- **`admin/`**: Componentes específicos del panel de administración
+- **`common/`**: Componentes reutilizables en toda la aplicación
+- **`contact/`**: Componentes de la sección de contacto
+- **`home/`**: Componentes de la página principal
+- **`layout/`**: Componentes de estructura (header, footer, navegación)
+- **`nosotros/`**: Componentes de la sección "Nosotros"
+- **`obra/`**: Componentes relacionados con obras (cards, galerías, formularios)
+- **`ui/`**: Componentes base de UI (shadcn/ui)
 
 ## 🎨 Paleta de Colores
 
@@ -146,16 +260,18 @@ npm run test:e2e:ui
 ## 🔐 Rutas
 
 ### Públicas
-- `/` - Redirige a `/obras`
-- `/obras` - Listado de obras (grid)
+- `/` - Página principal con obras destacadas
+- `/obras` - Listado completo de obras (grid con filtros)
 - `/obra/[id]` - Detalle de obra con galería y videos
+- `/nosotros` - Información sobre la empresa
+- `/contacto` - Formulario de contacto
 
 ### Admin (requiere autenticación)
-- `/admin/login` - Login
+- `/admin/login` - Login del administrador
 - `/admin/dashboard` - Dashboard principal
-- `/admin/obras` - Listado de obras (gestión)
+- `/admin/obras` - Listado de obras (gestión CRUD)
 - `/admin/obras/new` - Crear nueva obra
-- `/admin/obras/[id]/edit` - Editar obra
+- `/admin/obras/[id]/edit` - Editar obra existente
 
 ## 📤 Uploads
 
@@ -172,26 +288,36 @@ npm run test:e2e:ui
 
 ## 🚀 Despliegue en Vercel
 
+✅ **Este proyecto está completamente compatible con Vercel**
+
 1. **Conectar repositorio**
    - Ve a [vercel.com](https://vercel.com)
    - Importa tu repositorio de GitHub/GitLab
 
 2. **Configurar variables de entorno**
    - En el dashboard de Vercel, ve a Settings > Environment Variables
-   - Agrega:
-     - `NEXT_PUBLIC_SUPABASE_URL`
-     - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - Agrega las siguientes variables:
+     ```
+     NEXT_PUBLIC_SUPABASE_URL=tu_url_de_supabase
+     NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_clave_anonima
+     RESEND_API_KEY=opcional (para emails de contacto)
+     CONTACT_EMAIL=opcional (email de destino para contacto)
+     ```
 
 3. **Desplegar**
    - Vercel detectará automáticamente Next.js
    - El despliegue se iniciará automáticamente
+   - La estructura organizada es 100% compatible con Vercel
 
 ### Configuración adicional en Vercel
 
 Asegúrate de que el proyecto tenga:
-- **Framework Preset**: Next.js
-- **Build Command**: `npm run build`
+- **Framework Preset**: Next.js (detectado automáticamente)
+- **Build Command**: `npm run build` (por defecto)
 - **Output Directory**: `.next` (automático)
+- **Node Version**: 18.x o superior
+
+> 💡 **Nota**: La estructura organizada de componentes no afecta el deploy. Todos los imports usan rutas absolutas (`@/`) que funcionan perfectamente en Vercel.
 
 ## 🔒 Seguridad
 

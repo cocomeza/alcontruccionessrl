@@ -1,22 +1,29 @@
 import { getObraById, getObras } from '@/lib/actions/obras'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { Header } from '@/components/header'
-import { Footer } from '@/components/footer'
-import { ImageGallery } from '@/components/image-gallery'
-import { Suspense } from 'react'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Header } from '@/components/layout/header'
+import { Footer } from '@/components/layout/footer'
+import { ObraDetailContent } from '@/components/obra/obra-detail-content'
 
 export async function generateStaticParams() {
-  const obras = await getObras()
-  return obras.map((obra) => ({
-    id: obra.id,
-  }))
+  try {
+    const obras = await getObras()
+    return obras.map((obra) => ({
+      id: obra.id,
+    }))
+        } catch (error) {
+          // Si falla en build time, retornar array vacío (las páginas se generarán dinámicamente)
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('Error generando static params:', error)
+          }
+          return []
+        }
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   try {
-    const obra = await getObraById(params.id)
+    const obra = await getObraById(id)
     return {
       title: `${obra.title} - ALCONSTRUCCIONES SRL`,
       description: obra.description,
@@ -34,11 +41,12 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 export default async function ObraDetailPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   let obra
   try {
-    obra = await getObraById(params.id)
+    obra = await getObraById(id)
   } catch {
     notFound()
   }
@@ -53,57 +61,7 @@ export default async function ObraDetailPage({
       </div>
 
       <main className="container mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-4xl mx-auto"
-        >
-          <h1 className="text-4xl font-bold text-calypso mb-4">{obra.title}</h1>
-          <p className="text-lg text-muted-foreground mb-8">{obra.description}</p>
-
-          {obra.images && obra.images.length > 0 && (
-            <div className="space-y-6 mb-8">
-              <h2 className="text-2xl font-semibold text-calypso">Galería de Imágenes</h2>
-              <Suspense fallback={
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {Array.from({ length: obra.images.length }).map((_, i) => (
-                    <Skeleton key={i} className="aspect-video w-full" />
-                  ))}
-                </div>
-              }>
-                <ImageGallery images={obra.images} title={obra.title} />
-              </Suspense>
-            </div>
-          )}
-
-          {obra.videos && obra.videos.length > 0 && (
-            <div className="space-y-6">
-              <h2 className="text-2xl font-semibold text-calypso">Videos</h2>
-              <div className="grid grid-cols-1 gap-4">
-                {obra.videos.map((video, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <Card className="overflow-hidden">
-                      <div className="aspect-video w-full">
-                        <video
-                          src={video}
-                          controls
-                          className="w-full h-full"
-                        >
-                          Tu navegador no soporta videos HTML5.
-                        </video>
-                      </div>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          )}
-        </motion.div>
+        <ObraDetailContent obra={obra} />
       </main>
       <Footer />
     </div>

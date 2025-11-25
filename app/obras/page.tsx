@@ -1,15 +1,11 @@
 import { getObras } from '@/lib/actions/obras'
-import { Card, CardContent } from '@/components/ui/card'
-import Image from 'next/image'
-import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { Header } from '@/components/header'
-import { Footer } from '@/components/footer'
-import { SearchFilter } from '@/components/search-filter'
-import { CategoryFilter } from '@/components/category-filter'
-import { ObrasGridSkeleton } from '@/components/obra-card-skeleton'
-import { Pagination } from '@/components/pagination'
-import { OBRA_CATEGORIES } from '@/lib/types/database'
+import { Header } from '@/components/layout/header'
+import { Footer } from '@/components/layout/footer'
+import { SearchFilter } from '@/components/common/search-filter'
+import { CategoryFilter } from '@/components/common/category-filter'
+import { ObrasGridSkeleton } from '@/components/obra/obra-card-skeleton'
+import { Pagination } from '@/components/common/pagination'
+import { ObraCard } from '@/components/obra/obra-card'
 import { Suspense } from 'react'
 
 export const metadata = {
@@ -69,48 +65,7 @@ async function ObrasList({
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {paginatedObras.map((obra, index) => (
-          <motion.div
-            key={obra.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-          >
-            <Link href={`/obra/${obra.id}`}>
-              <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer h-full">
-                {obra.images && obra.images.length > 0 ? (
-                  <div className="relative aspect-video w-full">
-                    <Image
-                      src={obra.images[0]}
-                      alt={obra.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      loading={index < 6 ? 'eager' : 'lazy'}
-                    />
-                  </div>
-                ) : (
-                  <div className="aspect-video bg-muted flex items-center justify-center">
-                    <p className="text-muted-foreground">Sin imagen</p>
-                  </div>
-                )}
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <h2 className="text-xl font-semibold text-calypso flex-1">
-                    {obra.title}
-                  </h2>
-                  {obra.category && (
-                    <span className="text-xs px-2 py-1 bg-calypso/10 text-calypso rounded-full whitespace-nowrap">
-                      {OBRA_CATEGORIES.find(c => c.value === obra.category)?.label || obra.category}
-                    </span>
-                  )}
-                </div>
-                <p className="text-muted-foreground line-clamp-3">
-                  {obra.description}
-                </p>
-              </CardContent>
-              </Card>
-            </Link>
-          </motion.div>
+          <ObraCard key={obra.id} obra={obra} index={index} />
         ))}
       </div>
       {totalPages > 1 && (
@@ -128,11 +83,12 @@ async function ObrasList({
 export default async function ObrasPage({
   searchParams,
 }: {
-  searchParams: { q?: string; page?: string; category?: string }
+  searchParams: Promise<{ q?: string; page?: string; category?: string }>
 }) {
-  const searchQuery = searchParams.q || ''
-  const currentPage = parseInt(searchParams.page || '1', 10)
-  const categoryFilter = searchParams.category || 'all'
+  const resolvedSearchParams = await searchParams
+  const searchQuery = resolvedSearchParams.q || ''
+  const currentPage = parseInt(resolvedSearchParams.page || '1', 10)
+  const categoryFilter = resolvedSearchParams.category || 'all'
 
   return (
     <div className="min-h-screen bg-mystic dark:bg-background flex flex-col">

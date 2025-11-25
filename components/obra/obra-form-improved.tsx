@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Uploader } from '@/components/uploader'
+import { Uploader } from '@/components/common/uploader'
 import { Obra, OBRA_CATEGORIES } from '@/lib/types/database'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
@@ -33,7 +33,7 @@ export function ObraFormImproved({ obra }: ObraFormProps) {
       description: obra?.description || '',
       images: obra?.images || [],
       videos: obra?.videos || [],
-      category: obra?.category || undefined,
+      category: (obra?.category as typeof OBRA_CATEGORIES[number]['value'] | undefined) || undefined,
     },
   })
 

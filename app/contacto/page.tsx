@@ -1,10 +1,10 @@
-import { Header } from '@/components/header'
-import { Footer } from '@/components/footer'
-import { ContactForm } from '@/components/contact-form'
+import { Header } from '@/components/layout/header'
+import { Footer } from '@/components/layout/footer'
+import { ContactForm } from '@/components/contact/contact-form'
 import { Card, CardContent } from '@/components/ui/card'
 import { Mail, MapPin, Clock, Phone } from 'lucide-react'
-import { ContactHero } from '@/components/contact-hero'
-import { ContactInfo } from '@/components/contact-info'
+import { ContactHero } from '@/components/contact/contact-hero'
+import { ContactInfo } from '@/components/contact/contact-info'
 
 export const metadata = {
   title: 'Contacto - ALCONSTRUCCIONES SRL',

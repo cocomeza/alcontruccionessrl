@@ -1,5 +1,5 @@
 import { getObraById } from '@/lib/actions/obras'
-import { ObraFormImproved } from '@/components/obra-form-improved'
+import { ObraFormImproved } from '@/components/obra/obra-form-improved'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { notFound } from 'next/navigation'
@@ -7,11 +7,12 @@ import { notFound } from 'next/navigation'
 export default async function EditObraPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   let obra
   try {
-    obra = await getObraById(params.id)
+    obra = await getObraById(id)
   } catch {
     notFound()
   }

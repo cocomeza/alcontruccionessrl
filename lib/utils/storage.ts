@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/client'
+import { AppError, handleError, logError } from './error-handler'
 
 const BUCKET_NAME = 'obras-media'
 
@@ -7,48 +8,105 @@ export async function uploadFile(
   path: string,
   onProgress?: (progress: number) => void
 ): Promise<string> {
-  const supabase = createClient()
-  const fileName = `${Date.now()}-${path}`
+  try {
+    const supabase = createClient()
+    
+    if (!file || file.size === 0) {
+      throw new AppError('El archivo está vacío', 'EMPTY_FILE', 400)
+    }
 
-  const { data, error } = await supabase.storage
-    .from(BUCKET_NAME)
-    .upload(fileName, file, {
-      cacheControl: '3600',
-      upsert: false,
-    })
+    const fileName = `${Date.now()}-${path.replace(/[^a-zA-Z0-9.-]/g, '_')}`
 
-  if (error) {
-    throw new Error(`Error al subir archivo: ${error.message}`)
+    const { data, error } = await supabase.storage
+      .from(BUCKET_NAME)
+      .upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false,
+      })
+
+    if (error) {
+      throw new AppError(
+        `Error al subir archivo: ${error.message}`,
+        'UPLOAD_ERROR',
+        500
+      )
+    }
+
+    if (!data?.path) {
+      throw new AppError('No se recibió la ruta del archivo subido', 'NO_PATH', 500)
+    }
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from(BUCKET_NAME).getPublicUrl(data.path)
+
+    if (!publicUrl) {
+      throw new AppError('No se pudo obtener la URL pública del archivo', 'NO_PUBLIC_URL', 500)
+    }
+
+    return publicUrl
+  } catch (error) {
+    logError(error, 'uploadFile')
+    const handled = handleError(error)
+    throw new AppError(handled.message, handled.code, 500)
   }
-
-  const {
-    data: { publicUrl },
-  } = supabase.storage.from(BUCKET_NAME).getPublicUrl(data.path)
-
-  return publicUrl
 }
 
 export async function deleteFile(path: string): Promise<void> {
-  const supabase = createClient()
-  const fileName = path.split('/').pop() || ''
+  try {
+    if (!path || path.trim() === '') {
+      throw new AppError('La ruta del archivo es inválida', 'INVALID_PATH', 400)
+    }
 
-  const { error } = await supabase.storage.from(BUCKET_NAME).remove([fileName])
+    const supabase = createClient()
+    const fileName = path.split('/').pop() || ''
 
-  if (error) {
-    throw new Error(`Error al eliminar archivo: ${error.message}`)
+    if (!fileName) {
+      throw new AppError('No se pudo extraer el nombre del archivo', 'NO_FILENAME', 400)
+    }
+
+    const { error } = await supabase.storage.from(BUCKET_NAME).remove([fileName])
+
+    if (error) {
+      throw new AppError(
+        `Error al eliminar archivo: ${error.message}`,
+        'DELETE_ERROR',
+        500
+      )
+    }
+  } catch (error) {
+    logError(error, 'deleteFile')
+    const handled = handleError(error)
+    throw new AppError(handled.message, handled.code)
   }
 }
 
 export async function deleteFiles(paths: string[]): Promise<void> {
-  const supabase = createClient()
-  const fileNames = paths.map((path) => path.split('/').pop() || '').filter(Boolean)
+  try {
+    if (!paths || paths.length === 0) return
 
-  if (fileNames.length === 0) return
+    const supabase = createClient()
+    const fileNames = paths
+      .map((path) => path.split('/').pop() || '')
+      .filter(Boolean)
 
-  const { error } = await supabase.storage.from(BUCKET_NAME).remove(fileNames)
+    if (fileNames.length === 0) {
+      return
+    }
 
-  if (error) {
-    throw new Error(`Error al eliminar archivos: ${error.message}`)
+    const { error } = await supabase.storage.from(BUCKET_NAME).remove(fileNames)
+
+    if (error) {
+      throw new AppError(
+        `Error al eliminar archivos: ${error.message}`,
+        'DELETE_FILES_ERROR',
+        500
+      )
+    }
+  } catch (error) {
+    logError(error, 'deleteFiles')
+    const handled = handleError(error)
+    throw new AppError(handled.message, handled.code)
   }
 }
 

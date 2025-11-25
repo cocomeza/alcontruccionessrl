@@ -34,18 +34,27 @@ export async function updateSession(request: NextRequest) {
 
   const {
     data: { user },
+    error: authError,
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/admin/login') &&
-    request.nextUrl.pathname.startsWith('/admin')
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone()
-    url.pathname = '/admin/login'
-    return NextResponse.redirect(url)
+  // Logging para debugging (solo en desarrollo)
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[Middleware] ${request.nextUrl.pathname} - User: ${user ? user.email : 'null'}, Error: ${authError?.message || 'none'}`)
   }
+
+  // NO redirigir automáticamente por errores de auth - permitir que los componentes cliente manejen la verificación
+  // Esto evita problemas de sincronización de cookies después del login
+  if (authError && process.env.NODE_ENV === 'development') {
+    console.log(`[Middleware] Error de auth en ${request.nextUrl.pathname}: ${authError.message} - Permitiendo acceso para verificación cliente`)
+  }
+
+  // Si el usuario está autenticado y está en /admin/login, PERMITIR que el cliente maneje la redirección
+  // No redirigir desde el middleware para evitar conflictos con la redirección del cliente
+  // El cliente redirigirá a /admin/obras después del login exitoso
+
+  // Permitir que todas las rutas admin se carguen - los componentes cliente verificarán la autenticación
+  // Esto evita problemas de sincronización de cookies entre servidor y cliente después del login
+  // Los componentes cliente redirigirán al login si no hay sesión válida
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
   // creating a new response object with NextResponse.next() make sure to:

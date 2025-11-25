@@ -1,12 +1,12 @@
-import { Header } from '@/components/header'
-import { Footer } from '@/components/footer'
+import { Header } from '@/components/layout/header'
+import { Footer } from '@/components/layout/footer'
 import { Card, CardContent } from '@/components/ui/card'
 import { Building2, Target, Award, Users } from 'lucide-react'
-import { NosotrosHero } from '@/components/nosotros-hero'
-import { NosotrosHistoria } from '@/components/nosotros-historia'
-import { NosotrosValores } from '@/components/nosotros-valores'
-import { NosotrosPorQue } from '@/components/nosotros-porque'
-import { NosotrosEquipo } from '@/components/nosotros-equipo'
+import { NosotrosHero } from '@/components/nosotros/nosotros-hero'
+import { NosotrosHistoria } from '@/components/nosotros/nosotros-historia'
+import { NosotrosValores } from '@/components/nosotros/nosotros-valores'
+import { NosotrosPorQue } from '@/components/nosotros/nosotros-porque'
+import { NosotrosEquipo } from '@/components/nosotros/nosotros-equipo'
 
 export const metadata = {
   title: 'Nosotros - ALCONSTRUCCIONES SRL',

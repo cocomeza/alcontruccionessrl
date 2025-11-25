@@ -22,7 +22,7 @@ export async function sendContactEmail(data: {
       await resendClient.emails.send({
         from: 'ALCONSTRUCCIONES SRL <onboarding@resend.dev>', // Cambiar por tu dominio verificado
         to: process.env.CONTACT_EMAIL || 'contacto@alconstrucciones.com',
-        replyTo: data.email,
+        reply_to: data.email,
         subject: `Contacto: ${data.subject}`,
         html: `
           <h2>Nuevo mensaje de contacto</h2>

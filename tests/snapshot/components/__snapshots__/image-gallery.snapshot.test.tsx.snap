@@ -1,0 +1,246 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ImageGallery Snapshot > should match snapshot with multiple images 1`] = `
+<div
+  class="grid grid-cols-1 md:grid-cols-2 gap-4"
+>
+  <div
+    style="opacity: 0; transform: scale(0.9);"
+  >
+    <div
+      class="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
+    >
+      <div
+        class="relative aspect-video w-full"
+      >
+        <img
+          alt="Test Gallery - 1"
+          class="object-cover group-hover:scale-105 transition-transform duration-300"
+          data-nimg="fill"
+          decoding="async"
+          loading="eager"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="http://localhost:3000/_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=3840&q=75"
+          srcset="/_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=384&q=75 384w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=3840&q=75 3840w"
+          style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
+        />
+        <div
+          class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center"
+        >
+          <span
+            class="opacity-0 group-hover:opacity-100 text-white font-semibold transition-opacity"
+          >
+            Click para ampliar
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    style="opacity: 0; transform: scale(0.9);"
+  >
+    <div
+      class="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
+    >
+      <div
+        class="relative aspect-video w-full"
+      >
+        <img
+          alt="Test Gallery - 2"
+          class="object-cover group-hover:scale-105 transition-transform duration-300"
+          data-nimg="fill"
+          decoding="async"
+          loading="eager"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="http://localhost:3000/_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=3840&q=75"
+          srcset="/_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=384&q=75 384w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=3840&q=75 3840w"
+          style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
+        />
+        <div
+          class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center"
+        >
+          <span
+            class="opacity-0 group-hover:opacity-100 text-white font-semibold transition-opacity"
+          >
+            Click para ampliar
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    style="opacity: 0; transform: scale(0.9);"
+  >
+    <div
+      class="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
+    >
+      <div
+        class="relative aspect-video w-full"
+      >
+        <img
+          alt="Test Gallery - 3"
+          class="object-cover group-hover:scale-105 transition-transform duration-300"
+          data-nimg="fill"
+          decoding="async"
+          loading="eager"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="http://localhost:3000/_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=3840&q=75"
+          srcset="/_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=384&q=75 384w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=3840&q=75 3840w"
+          style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
+        />
+        <div
+          class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center"
+        >
+          <span
+            class="opacity-0 group-hover:opacity-100 text-white font-semibold transition-opacity"
+          >
+            Click para ampliar
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ImageGallery Snapshot > should match snapshot with single image 1`] = `
+<div
+  class="grid grid-cols-1 md:grid-cols-2 gap-4"
+>
+  <div
+    style="opacity: 0; transform: scale(0.9);"
+  >
+    <div
+      class="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
+    >
+      <div
+        class="relative aspect-video w-full"
+      >
+        <img
+          alt="Single Image - 1"
+          class="object-cover group-hover:scale-105 transition-transform duration-300"
+          data-nimg="fill"
+          decoding="async"
+          loading="eager"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="http://localhost:3000/_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=3840&q=75"
+          srcset="/_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=384&q=75 384w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=3840&q=75 3840w"
+          style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
+        />
+        <div
+          class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center"
+        >
+          <span
+            class="opacity-0 group-hover:opacity-100 text-white font-semibold transition-opacity"
+          >
+            Click para ampliar
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ImageGallery Snapshot > should match snapshot without title 1`] = `
+<div
+  class="grid grid-cols-1 md:grid-cols-2 gap-4"
+>
+  <div
+    style="opacity: 0; transform: scale(0.9);"
+  >
+    <div
+      class="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
+    >
+      <div
+        class="relative aspect-video w-full"
+      >
+        <img
+          alt="Imagen - 1"
+          class="object-cover group-hover:scale-105 transition-transform duration-300"
+          data-nimg="fill"
+          decoding="async"
+          loading="eager"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="http://localhost:3000/_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=3840&q=75"
+          srcset="/_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=384&q=75 384w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage1.jpg&w=3840&q=75 3840w"
+          style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
+        />
+        <div
+          class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center"
+        >
+          <span
+            class="opacity-0 group-hover:opacity-100 text-white font-semibold transition-opacity"
+          >
+            Click para ampliar
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    style="opacity: 0; transform: scale(0.9);"
+  >
+    <div
+      class="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
+    >
+      <div
+        class="relative aspect-video w-full"
+      >
+        <img
+          alt="Imagen - 2"
+          class="object-cover group-hover:scale-105 transition-transform duration-300"
+          data-nimg="fill"
+          decoding="async"
+          loading="eager"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="http://localhost:3000/_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=3840&q=75"
+          srcset="/_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=384&q=75 384w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage2.jpg&w=3840&q=75 3840w"
+          style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
+        />
+        <div
+          class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center"
+        >
+          <span
+            class="opacity-0 group-hover:opacity-100 text-white font-semibold transition-opacity"
+          >
+            Click para ampliar
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    style="opacity: 0; transform: scale(0.9);"
+  >
+    <div
+      class="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
+    >
+      <div
+        class="relative aspect-video w-full"
+      >
+        <img
+          alt="Imagen - 3"
+          class="object-cover group-hover:scale-105 transition-transform duration-300"
+          data-nimg="fill"
+          decoding="async"
+          loading="eager"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="http://localhost:3000/_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=3840&q=75"
+          srcset="/_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=384&q=75 384w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage3.jpg&w=3840&q=75 3840w"
+          style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
+        />
+        <div
+          class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center"
+        >
+          <span
+            class="opacity-0 group-hover:opacity-100 text-white font-semibold transition-opacity"
+          >
+            Click para ampliar
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

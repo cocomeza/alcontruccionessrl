@@ -46,6 +46,11 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 768px) 100vw, 50vw"
                   loading={index < 4 ? 'eager' : 'lazy'}
+                  unoptimized={image?.includes('supabase.co')}
+                  onError={(e) => {
+                    console.error('Error cargando imagen en galería:', image)
+                    console.error('Event:', e)
+                  }}
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                   <span className="opacity-0 group-hover:opacity-100 text-white font-semibold transition-opacity">

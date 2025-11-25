@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import { MobileMenu } from '@/components/mobile-menu'
-import { Logo } from '@/components/logo'
-import { AdminLinkClient } from '@/components/admin-link-client'
-import { ThemeToggle } from '@/components/theme-toggle'
-// import { AdminLinkDebug } from '@/components/admin-link-debug' // Descomentar para debug
+import { MobileMenu } from '@/components/layout/mobile-menu'
+import { Logo } from '@/components/layout/logo'
+import { AdminLinkClient } from '@/components/admin/admin-link-client'
+import { ThemeToggle } from '@/components/layout/theme-toggle'
+// import { AdminLinkDebug } from '@/components/admin/admin-link-debug' // Descomentar para debug
 
 export function Header() {
   return (

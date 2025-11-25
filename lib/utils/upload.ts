@@ -1,5 +1,3 @@
-import sharp from 'sharp'
-
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
 const MAX_VIDEO_SIZE = 50 * 1024 * 1024 // 50MB
 
@@ -9,24 +7,80 @@ export interface UploadProgress {
   percentage: number
 }
 
+// Compresión básica del lado del cliente usando Canvas API
+// Para compresión avanzada, usar el server action compressImageServer
 export async function compressImage(file: File): Promise<Blob> {
-  const arrayBuffer = await file.arrayBuffer()
-  const buffer = Buffer.from(arrayBuffer)
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const img = new Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        
+        if (!ctx) {
+          reject(new Error('No se pudo obtener contexto del canvas'))
+          return
+        }
 
-  const compressed = await sharp(buffer)
-    .resize(1920, 1080, {
-      fit: 'inside',
-      withoutEnlargement: true,
-    })
-    .jpeg({ quality: 85 })
-    .toBuffer()
+        // Calcular dimensiones manteniendo aspect ratio
+        let width = img.width
+        let height = img.height
+        const maxWidth = 1920
+        const maxHeight = 1080
 
-  return new Blob([compressed], { type: 'image/jpeg' })
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height)
+          width = width * ratio
+          height = height * ratio
+        }
+
+        canvas.width = width
+        canvas.height = height
+
+        // Dibujar y comprimir
+        ctx.drawImage(img, 0, 0, width, height)
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              resolve(blob)
+            } else {
+              reject(new Error('Error al comprimir la imagen'))
+            }
+          },
+          'image/jpeg',
+          0.85 // Calidad 85%
+        )
+      }
+      img.onerror = () => reject(new Error('Error al cargar la imagen'))
+      img.src = e.target?.result as string
+    }
+    reader.onerror = () => reject(new Error('Error al leer el archivo'))
+    reader.readAsDataURL(file)
+  })
 }
 
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/ogg']
+
 export function validateImage(file: File): { valid: boolean; error?: string } {
+  if (!file) {
+    return { valid: false, error: 'No se seleccionó ningún archivo' }
+  }
+
   if (!file.type.startsWith('image/')) {
     return { valid: false, error: 'El archivo debe ser una imagen' }
+  }
+
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+    return {
+      valid: false,
+      error: `Tipo de imagen no permitido. Formatos permitidos: JPEG, PNG, WebP, GIF`,
+    }
+  }
+
+  if (file.size === 0) {
+    return { valid: false, error: 'El archivo está vacío' }
   }
 
   if (file.size > MAX_IMAGE_SIZE) {
@@ -40,8 +94,23 @@ export function validateImage(file: File): { valid: boolean; error?: string } {
 }
 
 export function validateVideo(file: File): { valid: boolean; error?: string } {
+  if (!file) {
+    return { valid: false, error: 'No se seleccionó ningún archivo' }
+  }
+
   if (!file.type.startsWith('video/')) {
     return { valid: false, error: 'El archivo debe ser un video' }
+  }
+
+  if (!ALLOWED_VIDEO_TYPES.includes(file.type)) {
+    return {
+      valid: false,
+      error: `Tipo de video no permitido. Formatos permitidos: MP4, WebM, OGG`,
+    }
+  }
+
+  if (file.size === 0) {
+    return { valid: false, error: 'El archivo está vacío' }
   }
 
   if (file.size > MAX_VIDEO_SIZE) {
