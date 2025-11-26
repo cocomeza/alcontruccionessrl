@@ -12,7 +12,8 @@ export const metadata = {
 
 export default async function HomePage() {
   const obras = await getObras()
-  const obrasDestacadas = obras.slice(0, 3) // Mostrar solo las 3 primeras
+  // Filtrar solo las obras destacadas y mostrar máximo 6
+  const obrasDestacadas = obras.filter(obra => obra.featured === true).slice(0, 6)
 
   return (
     <div className="min-h-screen bg-mystic dark:bg-background flex flex-col">

@@ -24,10 +24,14 @@ export async function getObraById(id: string) {
     .from('obras')
     .select('*')
     .eq('id', id)
-    .single()
+    .maybeSingle()
 
   if (error) {
     throw new Error(`Error al obtener obra: ${error.message}`)
+  }
+
+  if (!data) {
+    throw new Error('Obra no encontrada')
   }
 
   return data
@@ -44,6 +48,18 @@ export async function createObra(obra: ObraInsert) {
     throw new Error('No autorizado')
   }
 
+  // Debug logging en desarrollo
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🔍 createObra Debug:', {
+      title: obra.title,
+      imagesCount: obra.images?.length || 0,
+      videosCount: obra.videos?.length || 0,
+      images: obra.images,
+      videos: obra.videos,
+      fullData: obra,
+    })
+  }
+
   const { data, error } = await supabase
     .from('obras')
     .insert(obra)
@@ -51,11 +67,23 @@ export async function createObra(obra: ObraInsert) {
     .single()
 
   if (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('❌ Error al crear obra:', error)
+    }
     throw new Error(`Error al crear obra: ${error.message}`)
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log('✅ Obra creada exitosamente:', {
+      id: data.id,
+      imagesCount: data.images?.length || 0,
+      videosCount: data.videos?.length || 0,
+    })
   }
 
   revalidatePath('/obras')
   revalidatePath('/admin/obras')
+  revalidatePath('/')
   
   return data
 }
@@ -85,6 +113,7 @@ export async function updateObra(id: string, obra: ObraUpdate) {
   revalidatePath('/obras')
   revalidatePath(`/obra/${id}`)
   revalidatePath('/admin/obras')
+  revalidatePath('/')
   
   return data
 }
@@ -100,15 +129,35 @@ export async function deleteObra(id: string) {
     throw new Error('No autorizado')
   }
 
-  // Obtener la obra para eliminar archivos
-  const obra = await getObraById(id)
-  
-  // Eliminar archivos del storage si existen
-  if ((obra.images && obra.images.length > 0) || (obra.videos && obra.videos.length > 0)) {
-    const { deleteFiles } = await import('@/lib/utils/storage')
-    await deleteFiles([...(obra.images || []), ...(obra.videos || [])])
+  // Obtener solo las imágenes y videos de la obra antes de eliminarla
+  // Usamos maybeSingle() para manejar el caso donde la obra no existe
+  const { data: obra, error: fetchError } = await supabase
+    .from('obras')
+    .select('images, videos')
+    .eq('id', id)
+    .maybeSingle()
+
+  // Si hay un error al obtener la obra, continuamos con la eliminación
+  // (puede que la obra ya no exista o haya un problema, pero intentamos eliminarla de todos modos)
+  if (fetchError && process.env.NODE_ENV === 'development') {
+    console.warn('Error al obtener obra antes de eliminar:', fetchError.message)
   }
 
+  // Eliminar archivos del storage si existen y se pudieron obtener
+  if (obra && ((obra.images && obra.images.length > 0) || (obra.videos && obra.videos.length > 0))) {
+    try {
+      const { deleteFiles } = await import('@/lib/utils/storage')
+      await deleteFiles([...(obra.images || []), ...(obra.videos || [])])
+    } catch (storageError) {
+      // Si falla la eliminación de archivos, registramos el error pero continuamos
+      // con la eliminación de la obra en la base de datos
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Error al eliminar archivos del storage:', storageError)
+      }
+    }
+  }
+
+  // Eliminar la obra de la base de datos
   const { error } = await supabase.from('obras').delete().eq('id', id)
 
   if (error) {
@@ -117,5 +166,6 @@ export async function deleteObra(id: string) {
 
   revalidatePath('/obras')
   revalidatePath('/admin/obras')
+  revalidatePath(`/obra/${id}`)
 }
 

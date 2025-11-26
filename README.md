@@ -60,6 +60,7 @@ Ejecuta los scripts SQL en el siguiente orden en el SQL Editor de Supabase:
 
 1. **`supabase/setup.sql`** - Script principal (crea tabla, políticas RLS, índices)
 2. **`supabase/categorias.sql`** - Agrega soporte para categorías (opcional pero recomendado)
+3. **`supabase/add-featured-column.sql`** - Agrega columna `featured` para destacar obras en el home
 
 Ver `supabase/README.md` para instrucciones detalladas.
 
@@ -178,6 +179,9 @@ npm run test:e2e:ui
 │   ├── obra/              # Componentes relacionados con obras
 │   │   ├── image-gallery.tsx
 │   │   ├── image-lightbox.tsx
+│   │   ├── video-gallery.tsx
+│   │   ├── video-lightbox.tsx
+│   │   ├── mixed-gallery-lightbox.tsx
 │   │   ├── obra-card.tsx
 │   │   ├── obra-card-skeleton.tsx
 │   │   ├── obra-detail-content.tsx
@@ -187,6 +191,7 @@ npm run test:e2e:ui
 │       ├── alert.tsx
 │       ├── button.tsx
 │       ├── card.tsx
+│       ├── checkbox.tsx
 │       └── ...
 ├── lib/                   # Utilidades y lógica de negocio
 │   ├── actions/           # Server Actions
@@ -227,11 +232,17 @@ npm run test:e2e:ui
 ├── supabase/              # Scripts SQL para Supabase
 │   ├── setup.sql
 │   ├── storage-policies.sql
-│   └── categorias.sql
+│   ├── categorias.sql
+│   └── add-featured-column.sql
+├── scripts/               # Scripts de utilidad
+│   ├── check-storage-urls.ts
+│   └── debug-obra-data.ts
 ├── docs/                  # Documentación del proyecto
 │   ├── CAMBIOS-TESTS.md
 │   ├── ESTRUCTURA-PROYECTO.md
-│   └── MEJORAS-IMPLEMENTADAS.md
+│   ├── MEJORAS-IMPLEMENTADAS.md
+│   ├── TROUBLESHOOTING-IMAGES-VIDEOS.md
+│   └── VIDEO-DIAGNOSTIC-RESULTS.md
 └── public/                # Archivos estáticos
     ├── logo.png
     └── hero-background.jpg
@@ -260,9 +271,9 @@ Los componentes están organizados por funcionalidad para facilitar la navegaci�
 ## 🔐 Rutas
 
 ### Públicas
-- `/` - Página principal con obras destacadas
-- `/obras` - Listado completo de obras (grid con filtros)
-- `/obra/[id]` - Detalle de obra con galería y videos
+- `/` - Página principal con obras destacadas (solo obras marcadas como `featured`)
+- `/obras` - Listado completo de obras (grid con filtros, todas las obras)
+- `/obra/[id]` - Detalle de obra con galería mixta de imágenes y videos
 - `/nosotros` - Información sobre la empresa
 - `/contacto` - Formulario de contacto
 
@@ -280,11 +291,32 @@ Los componentes están organizados por funcionalidad para facilitar la navegaci�
 - **Videos**: Máximo 50MB por archivo (límite Supabase Free)
 
 ### Características
-- Compresión automática de imágenes con Sharp
+- Compresión automática de imágenes con Sharp (servidor) y Canvas API (cliente)
 - Validación de tamaño antes de subir
 - Barra de progreso durante la subida
 - Previsualización de imágenes
 - Eliminación automática de archivos al borrar obras
+- Soporte para múltiples imágenes y videos por obra
+
+## 🎯 Funcionalidades Principales
+
+### Galería Mixta de Imágenes y Videos
+- **Galería unificada**: Al hacer clic en una card de obra, se abre una galería que muestra todas las imágenes y videos juntos
+- **Navegación fluida**: Puedes navegar entre imágenes y videos usando flechas, teclado o miniaturas
+- **Lightbox completo**: Pantalla completa con controles de navegación y descripción de la obra
+- **Videos en cards**: Los videos se muestran en las cards con preview en hover
+
+### Obras Destacadas
+- **Checkbox de destacar**: Al crear o editar una obra, puedes marcarla como destacada
+- **Home inteligente**: Solo las obras marcadas como destacadas aparecen en la página principal
+- **Máximo 6 obras**: El home muestra hasta 6 obras destacadas
+- **Todas en /obras**: Todas las obras (destacadas o no) aparecen en la sección `/obras`
+
+### Panel de Administración
+- **CRUD completo**: Crear, leer, actualizar y eliminar obras
+- **Gestión de medios**: Subir múltiples imágenes y videos por obra
+- **Control de visibilidad**: Decidir qué obras aparecen en el home
+- **Categorización**: Asignar categorías a las obras para mejor organización
 
 ## 🚀 Despliegue en Vercel
 
@@ -328,10 +360,13 @@ Asegúrate de que el proyecto tenga:
 
 ## 📝 Notas
 
-- Las imágenes se comprimen automáticamente antes de subir
+- Las imágenes se comprimen automáticamente antes de subir (Sharp en servidor, Canvas API en cliente)
 - Los archivos se almacenan en Supabase Storage
 - Las URLs de los archivos se guardan en la base de datos como arrays JSONB
 - Al eliminar una obra, se eliminan automáticamente sus archivos del storage
+- Las obras destacadas (`featured = true`) aparecen en el home, las demás solo en `/obras`
+- La galería mixta permite navegar entre imágenes y videos de forma unificada
+- Los videos se muestran con preview en hover en las cards
 
 ## 🐛 Solución de Problemas
 

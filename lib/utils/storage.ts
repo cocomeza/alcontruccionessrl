@@ -3,6 +3,23 @@ import { AppError, handleError, logError } from './error-handler'
 
 const BUCKET_NAME = 'obras-media'
 
+/**
+ * Verifica si una URL es de Supabase Storage
+ */
+export function isSupabaseUrl(url: string | undefined | null): boolean {
+  if (!url) return false
+  return url.includes('supabase.co') || url.includes('supabase.com')
+}
+
+/**
+ * Obtiene la URL pública de un archivo en Supabase Storage
+ */
+export function getPublicUrl(path: string): string {
+  const supabase = createClient()
+  const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(path)
+  return data.publicUrl
+}
+
 export async function uploadFile(
   file: File | Blob,
   path: string,
@@ -25,6 +42,9 @@ export async function uploadFile(
       })
 
     if (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error al subir archivo:', error)
+      }
       throw new AppError(
         `Error al subir archivo: ${error.message}`,
         'UPLOAD_ERROR',
@@ -44,6 +64,14 @@ export async function uploadFile(
       throw new AppError('No se pudo obtener la URL pública del archivo', 'NO_PUBLIC_URL', 500)
     }
 
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Archivo subido exitosamente:', {
+        path: data.path,
+        publicUrl,
+        fileName,
+      })
+    }
+
     return publicUrl
   } catch (error) {
     logError(error, 'uploadFile')
@@ -59,7 +87,15 @@ export async function deleteFile(path: string): Promise<void> {
     }
 
     const supabase = createClient()
-    const fileName = path.split('/').pop() || ''
+    // Extraer el nombre del archivo de la URL completa si es necesario
+    let fileName: string
+    if (path.includes('/')) {
+      // Si es una URL completa, extraer el nombre del archivo
+      const urlParts = path.split('/')
+      fileName = urlParts[urlParts.length - 1]
+    } else {
+      fileName = path
+    }
 
     if (!fileName) {
       throw new AppError('No se pudo extraer el nombre del archivo', 'NO_FILENAME', 400)
@@ -87,7 +123,13 @@ export async function deleteFiles(paths: string[]): Promise<void> {
 
     const supabase = createClient()
     const fileNames = paths
-      .map((path) => path.split('/').pop() || '')
+      .map((path) => {
+        if (path.includes('/')) {
+          const urlParts = path.split('/')
+          return urlParts[urlParts.length - 1]
+        }
+        return path
+      })
       .filter(Boolean)
 
     if (fileNames.length === 0) {
@@ -109,4 +151,3 @@ export async function deleteFiles(paths: string[]): Promise<void> {
     throw new AppError(handled.message, handled.code)
   }
 }
-

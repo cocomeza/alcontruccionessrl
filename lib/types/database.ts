@@ -5,6 +5,7 @@ export interface Obra {
   images: string[]
   videos: string[]
   category?: string
+  featured?: boolean
   created_at: string
 }
 
@@ -14,6 +15,7 @@ export interface ObraInsert {
   images: string[]
   videos: string[]
   category?: string
+  featured?: boolean
 }
 
 export interface ObraUpdate {
@@ -22,6 +24,7 @@ export interface ObraUpdate {
   images?: string[]
   videos?: string[]
   category?: string
+  featured?: boolean
 }
 
 export const OBRA_CATEGORIES = [

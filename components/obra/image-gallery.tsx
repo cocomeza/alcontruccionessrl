@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { Card } from '@/components/ui/card'
 import { ImageLightbox } from './image-lightbox'
 import { motion } from 'framer-motion'
+import { isSupabaseUrl } from '@/lib/utils/storage'
 
 interface ImageGalleryProps {
   images: string[]
@@ -14,6 +15,7 @@ interface ImageGalleryProps {
 export function ImageGallery({ images, title }: ImageGalleryProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const [failedImages, setFailedImages] = useState<Set<number>>(new Set())
 
   if (!images || images.length === 0) {
     return null
@@ -24,43 +26,63 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
     setLightboxOpen(true)
   }
 
+  const handleImageError = (index: number, imageUrl: string) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error cargando imagen en galería:', {
+        index,
+        url: imageUrl,
+        isSupabase: isSupabaseUrl(imageUrl),
+      })
+    }
+    setFailedImages((prev) => new Set(prev).add(index))
+  }
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {images.map((image, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.1 }}
-          >
-            <Card
-              className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
-              onClick={() => handleImageClick(index)}
-            >
-              <div className="relative aspect-video w-full">
-                <Image
-                  src={image}
-                  alt={`${title || 'Imagen'} - ${index + 1}`}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  loading={index < 4 ? 'eager' : 'lazy'}
-                  unoptimized={image?.includes('supabase.co')}
-                  onError={(e) => {
-                    console.error('Error cargando imagen en galería:', image)
-                    console.error('Event:', e)
-                  }}
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                  <span className="opacity-0 group-hover:opacity-100 text-white font-semibold transition-opacity">
-                    Click para ampliar
-                  </span>
+        {images.map((image, index) => {
+          if (failedImages.has(index)) {
+            return (
+              <Card key={index} className="overflow-hidden">
+                <div className="relative aspect-video w-full bg-muted flex items-center justify-center">
+                  <p className="text-muted-foreground text-sm">Error al cargar imagen</p>
                 </div>
-              </div>
-            </Card>
-          </motion.div>
-        ))}
+              </Card>
+            )
+          }
+
+          return (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <Card
+                className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
+                onClick={() => handleImageClick(index)}
+              >
+                <div className="relative aspect-video w-full">
+                  <Image
+                    src={image}
+                    alt={`${title || 'Imagen'} - ${index + 1}`}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    loading={index < 4 ? 'eager' : 'lazy'}
+                    unoptimized={isSupabaseUrl(image)}
+                    onError={() => handleImageError(index, image)}
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                    <span className="opacity-0 group-hover:opacity-100 text-white font-semibold transition-opacity">
+                      Click para ampliar
+                    </span>
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+          )
+        })}
       </div>
 
       {lightboxOpen && (

@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
+import { isSupabaseUrl } from '@/lib/utils/storage'
 
 interface ImageLightboxProps {
   images: string[]
@@ -138,9 +139,15 @@ export function ImageLightbox({ images, initialIndex = 0, onClose, title }: Imag
               height={800}
               className="max-w-full max-h-[90vh] object-contain"
               priority
-              unoptimized={images[currentIndex]?.includes('supabase.co')}
-              onError={(e) => {
-                console.error('Error cargando imagen en lightbox:', images[currentIndex])
+              unoptimized={isSupabaseUrl(images[currentIndex])}
+              onError={() => {
+                if (process.env.NODE_ENV === 'development') {
+                  console.error('Error cargando imagen en lightbox:', {
+                    index: currentIndex,
+                    url: images[currentIndex],
+                    isSupabase: isSupabaseUrl(images[currentIndex]),
+                  })
+                }
               }}
             />
           </motion.div>
@@ -204,6 +211,7 @@ export function ImageLightbox({ images, initialIndex = 0, onClose, title }: Imag
                   fill
                   className="object-cover"
                   sizes="64px"
+                  unoptimized={isSupabaseUrl(image)}
                 />
               </button>
             ))}

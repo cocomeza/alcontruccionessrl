@@ -12,6 +12,7 @@ export const obraSchema = z.object({
   images: z.array(z.string().url('URL de imagen inválida')).default([]),
   videos: z.array(z.string().url('URL de video inválida')).default([]),
   category: z.enum(['vivienda', 'edificios-altura', 'comercial', 'industrial', 'obra-publica', 'infraestructura', 'refaccion', 'ampliacion', 'otros']).optional(),
+  featured: z.boolean().default(false).optional(),
 })
 
 export type ObraFormData = z.infer<typeof obraSchema>
