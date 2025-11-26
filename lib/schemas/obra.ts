@@ -9,8 +9,8 @@ export const obraSchema = z.object({
     .string()
     .min(10, 'La descripción debe tener al menos 10 caracteres')
     .max(2000, 'La descripción no puede exceder 2000 caracteres'),
-  images: z.array(z.string().url('URL de imagen inválida')).default([]),
-  videos: z.array(z.string().url('URL de video inválida')).default([]),
+  images: z.array(z.string().url('URL de imagen inválida')).default([]).optional(),
+  videos: z.array(z.string().url('URL de video inválida')).default([]).optional(),
   category: z.enum(['vivienda', 'edificios-altura', 'comercial', 'industrial', 'obra-publica', 'infraestructura', 'refaccion', 'ampliacion', 'otros']).optional(),
   featured: z.boolean().default(false).optional(),
 })

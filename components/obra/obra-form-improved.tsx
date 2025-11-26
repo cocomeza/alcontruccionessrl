@@ -44,16 +44,17 @@ export function ObraFormImproved({ obra }: ObraFormProps) {
 
   const onSubmit = async (data: ObraFormData) => {
     // Debug logging en desarrollo
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔍 ObraForm Submit Debug:', {
-        title: data.title,
-        imagesCount: data.images?.length || 0,
-        videosCount: data.videos?.length || 0,
-        images: data.images,
-        videos: data.videos,
-        isUpdate: !!obra,
-      })
-    }
+    console.log('🔍 ObraForm Submit Debug:', {
+      title: data.title,
+      imagesCount: data.images?.length || 0,
+      videosCount: data.videos?.length || 0,
+      images: data.images,
+      videos: data.videos,
+      videosType: typeof data.videos,
+      isVideosArray: Array.isArray(data.videos),
+      isUpdate: !!obra,
+      formData: data,
+    })
 
     try {
       if (obra) {
@@ -161,10 +162,23 @@ export function ObraFormImproved({ obra }: ObraFormProps) {
           <Uploader
             type="video"
             onUploadComplete={(urls) => {
-              if (process.env.NODE_ENV === 'development') {
-                console.log('🔍 Videos upload complete:', urls)
-              }
+              console.log('🔍 Videos upload complete callback:', {
+                urls,
+                urlsLength: urls.length,
+                urlsType: typeof urls,
+                isArray: Array.isArray(urls),
+                currentVideos: videos,
+              })
               setValue('videos', urls, { shouldValidate: true })
+              // Verificar que se guardó correctamente
+              setTimeout(() => {
+                const currentVideos = watch('videos')
+                console.log('🔍 Videos después de setValue:', {
+                  currentVideos,
+                  currentVideosLength: currentVideos?.length || 0,
+                  isArray: Array.isArray(currentVideos),
+                })
+              }, 100)
             }}
             existingUrls={videos}
           />

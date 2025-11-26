@@ -30,16 +30,23 @@ export function Uploader({ type, onUploadComplete, existingUrls = [] }: Uploader
     const validFiles: File[] = []
     const newPreviews: string[] = []
 
+    console.log(`🔍 Uploader handleFileSelect (${type}):`, {
+      selectedFilesCount: selectedFiles.length,
+      selectedFiles: selectedFiles.map(f => ({ name: f.name, size: f.size, type: f.type })),
+    })
+
     for (const file of selectedFiles) {
       const validator = type === 'image' ? validateImage : validateVideo
       const validation = validator(file)
 
       if (!validation.valid) {
+        console.error(`❌ Archivo inválido (${type}):`, file.name, validation.error)
         newErrors.push(`${file.name}: ${validation.error}`)
         continue
       }
 
       validFiles.push(file)
+      console.log(`✅ Archivo válido (${type}):`, file.name)
 
       if (type === 'image') {
         const preview = URL.createObjectURL(file)
@@ -47,9 +54,27 @@ export function Uploader({ type, onUploadComplete, existingUrls = [] }: Uploader
       }
     }
 
+    console.log(`🔍 Uploader: Archivos válidos después de validación:`, {
+      validFilesCount: validFiles.length,
+      validFiles: validFiles.map(f => f.name),
+    })
+
     setErrors(newErrors)
-    setFiles((prev) => [...prev, ...validFiles])
+    setFiles((prev) => {
+      const updated = [...prev, ...validFiles]
+      console.log(`🔍 Uploader: Estado files actualizado:`, {
+        prevCount: prev.length,
+        newCount: updated.length,
+        totalFiles: updated.map(f => f.name),
+      })
+      return updated
+    })
     setPreviews((prev) => [...prev, ...newPreviews])
+    
+    // Limpiar el input para permitir seleccionar el mismo archivo nuevamente
+    if (inputRef.current) {
+      inputRef.current.value = ''
+    }
   }
 
   const removeFile = (index: number) => {
@@ -95,7 +120,15 @@ export function Uploader({ type, onUploadComplete, existingUrls = [] }: Uploader
       }
 
       const allUrls = [...uploadedUrls, ...urls]
+      console.log('🔍 Uploader: URLs combinadas:', {
+        uploadedUrls,
+        newUrls: urls,
+        allUrls,
+        allUrlsLength: allUrls.length,
+        isArray: Array.isArray(allUrls),
+      })
       setUploadedUrls(allUrls)
+      console.log('🔍 Uploader: Llamando onUploadComplete con:', allUrls)
       onUploadComplete(allUrls)
       setFiles([])
       setPreviews([])
@@ -115,7 +148,7 @@ export function Uploader({ type, onUploadComplete, existingUrls = [] }: Uploader
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-4">
+      <div className="space-y-2">
         <input
           ref={inputRef}
           type="file"
@@ -124,19 +157,32 @@ export function Uploader({ type, onUploadComplete, existingUrls = [] }: Uploader
           onChange={handleFileSelect}
           className="hidden"
         />
-        <Button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          disabled={uploading}
-          variant="outline"
-        >
-          <Upload className="mr-2 h-4 w-4" />
-          Seleccionar {type === 'image' ? 'imágenes' : 'videos'}
-        </Button>
-        {files.length > 0 && (
-          <Button onClick={handleUpload} disabled={uploading}>
-            Subir {files.length} archivo{files.length > 1 ? 's' : ''}
+        <div className="flex items-center gap-4">
+          <Button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={uploading}
+            variant="outline"
+          >
+            <Upload className="mr-2 h-4 w-4" />
+            Seleccionar {type === 'image' ? 'imágenes' : 'videos'}
           </Button>
+          {files.length > 0 && (
+            <Button 
+              onClick={handleUpload} 
+              disabled={uploading}
+              className="bg-boston-blue hover:bg-calypso"
+            >
+              <Upload className="mr-2 h-4 w-4" />
+              Subir {files.length} {type === 'image' ? 'imagen' : 'video'}{files.length > 1 ? 'es' : ''} a la plataforma
+            </Button>
+          )}
+        </div>
+        {files.length > 0 && (
+          <p className="text-sm text-muted-foreground">
+            {files.length} {type === 'image' ? 'imagen' : 'video'}{files.length > 1 ? 'es' : ''} seleccionado{files.length > 1 ? 's' : ''}. 
+            Haz clic en "Subir" para cargar {files.length > 1 ? 'los archivos' : 'el archivo'} a Supabase Storage.
+          </p>
         )}
       </div>
 

@@ -4,6 +4,17 @@ import { createClient } from '@/lib/supabase/server'
 import { ObraInsert, ObraUpdate } from '@/lib/types/database'
 import { revalidatePath } from 'next/cache'
 
+/**
+ * Normaliza arrays de imágenes y videos para asegurar que siempre sean arrays
+ */
+function normalizeObraData(obra: any) {
+  return {
+    ...obra,
+    images: Array.isArray(obra.images) ? obra.images : (obra.images ? [obra.images] : []),
+    videos: Array.isArray(obra.videos) ? obra.videos : (obra.videos ? [obra.videos] : []),
+  }
+}
+
 export async function getObras() {
   const supabase = await createClient()
   const { data, error } = await supabase
@@ -15,7 +26,25 @@ export async function getObras() {
     throw new Error(`Error al obtener obras: ${error.message}`)
   }
 
-  return data
+  // Normalizar datos y debug logging en desarrollo
+  const normalizedData = data?.map(normalizeObraData) || []
+  
+  if (process.env.NODE_ENV === 'development' && normalizedData.length > 0) {
+    normalizedData.forEach((obra) => {
+      const videosCount = obra.videos.length
+      const imagesCount = obra.images.length
+      if (videosCount > 0) {
+        console.log(`📹 Obra "${obra.title}" tiene ${videosCount} video(s):`, {
+          videos: obra.videos,
+          images: imagesCount,
+          videosType: typeof obra.videos,
+          isArray: Array.isArray(obra.videos),
+        })
+      }
+    })
+  }
+
+  return normalizedData
 }
 
 export async function getObraById(id: string) {
@@ -34,7 +63,8 @@ export async function getObraById(id: string) {
     throw new Error('Obra no encontrada')
   }
 
-  return data
+  // Normalizar datos
+  return normalizeObraData(data)
 }
 
 export async function createObra(obra: ObraInsert) {
@@ -49,16 +79,16 @@ export async function createObra(obra: ObraInsert) {
   }
 
   // Debug logging en desarrollo
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🔍 createObra Debug:', {
-      title: obra.title,
-      imagesCount: obra.images?.length || 0,
-      videosCount: obra.videos?.length || 0,
-      images: obra.images,
-      videos: obra.videos,
-      fullData: obra,
-    })
-  }
+  console.log('🔍 createObra Debug:', {
+    title: obra.title,
+    imagesCount: obra.images?.length || 0,
+    videosCount: obra.videos?.length || 0,
+    images: obra.images,
+    videos: obra.videos,
+    videosType: typeof obra.videos,
+    isVideosArray: Array.isArray(obra.videos),
+    fullData: obra,
+  })
 
   const { data, error } = await supabase
     .from('obras')
@@ -73,13 +103,15 @@ export async function createObra(obra: ObraInsert) {
     throw new Error(`Error al crear obra: ${error.message}`)
   }
 
-  if (process.env.NODE_ENV === 'development') {
-    console.log('✅ Obra creada exitosamente:', {
-      id: data.id,
-      imagesCount: data.images?.length || 0,
-      videosCount: data.videos?.length || 0,
-    })
-  }
+  console.log('✅ Obra creada exitosamente:', {
+    id: data.id,
+    imagesCount: data.images?.length || 0,
+    videosCount: data.videos?.length || 0,
+    images: data.images,
+    videos: data.videos,
+    videosType: typeof data.videos,
+    isVideosArray: Array.isArray(data.videos),
+  })
 
   revalidatePath('/obras')
   revalidatePath('/admin/obras')

@@ -22,8 +22,12 @@ export function ObraCard({ obra, index }: ObraCardProps) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [galleryOpen, setGalleryOpen] = useState(false)
 
-  const hasImages = obra.images && obra.images.length > 0 && !imageError
-  const hasVideos = obra.videos && obra.videos.length > 0 && !videoError
+  // Asegurar que siempre sean arrays
+  const images = Array.isArray(obra.images) ? obra.images : (obra.images ? [obra.images] : [])
+  const videos = Array.isArray(obra.videos) ? obra.videos : (obra.videos ? [obra.videos] : [])
+  
+  const hasImages = images.length > 0 && !imageError
+  const hasVideos = videos.length > 0 && !videoError
   const showVideo = !hasImages && hasVideos
   const hasMedia = hasImages || hasVideos
 
@@ -35,30 +39,44 @@ export function ObraCard({ obra, index }: ObraCardProps) {
       hasImages,
       hasVideos,
       showVideo,
-      imagesCount: obra.images?.length || 0,
-      videosCount: obra.videos?.length || 0,
+      imagesCount: images.length,
+      videosCount: videos.length,
       imageError,
       videoError,
+      images,
+      videos,
+      imagesType: typeof obra.images,
+      videosType: typeof obra.videos,
+      isImagesArray: Array.isArray(obra.images),
+      isVideosArray: Array.isArray(obra.videos),
+      showVideo,
+      hasMedia,
     })
   }
 
   const handleImageError = () => {
     if (process.env.NODE_ENV === 'development') {
-      console.error('Error cargando imagen en obra card:', {
+      console.error('❌ Error cargando imagen en obra card:', {
         obraId: obra.id,
-        imageUrl: obra.images[0],
-        isSupabase: isSupabaseUrl(obra.images[0]),
+        imageUrl: images[0],
+        isSupabase: isSupabaseUrl(images[0]),
+        allImages: images,
       })
     }
     setImageError(true)
   }
 
-  const handleVideoError = () => {
+  const handleVideoError = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+    const videoElement = e.currentTarget
     if (process.env.NODE_ENV === 'development') {
-      console.error('Error cargando video en obra card:', {
+      console.error('❌ Error cargando video en obra card:', {
         obraId: obra.id,
-        videoUrl: obra.videos[0],
-        isSupabase: isSupabaseUrl(obra.videos[0]),
+        videoUrl: videos[0],
+        isSupabase: isSupabaseUrl(videos[0]),
+        allVideos: videos,
+        videoError: videoElement.error,
+        networkState: videoElement.networkState,
+        readyState: videoElement.readyState,
       })
     }
     setVideoError(true)
@@ -87,20 +105,20 @@ export function ObraCard({ obra, index }: ObraCardProps) {
             {hasImages ? (
               <div className="relative aspect-video w-full">
                 <Image
-                  src={obra.images[0]}
+                  src={images[0]}
                   alt={obra.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   loading={index < 6 ? 'eager' : 'lazy'}
-                  unoptimized={isSupabaseUrl(obra.images[0])}
+                  unoptimized={isSupabaseUrl(images[0])}
                   onError={handleImageError}
                 />
                 {/* Indicador de que hay videos disponibles */}
                 {hasVideos && (
                   <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs flex items-center gap-1 z-10">
                     <VideoIcon className="h-3 w-3" />
-                    {obra.videos.length} video{obra.videos.length > 1 ? 's' : ''}
+                    {videos.length} video{videos.length > 1 ? 's' : ''}
                   </div>
                 )}
                 {/* Overlay para indicar que se puede hacer clic */}
@@ -113,12 +131,22 @@ export function ObraCard({ obra, index }: ObraCardProps) {
             ) : showVideo ? (
               <div className="relative aspect-video w-full bg-black">
                 <video
-                  src={obra.videos[0]}
+                  src={videos[0]}
                   className="w-full h-full object-cover"
                   preload="metadata"
                   playsInline
                   crossOrigin="anonymous"
                   onError={handleVideoError}
+                  onLoadStart={() => {
+                    if (process.env.NODE_ENV === 'development') {
+                      console.log('📹 Video iniciando carga:', videos[0])
+                    }
+                  }}
+                  onLoadedMetadata={() => {
+                    if (process.env.NODE_ENV === 'development') {
+                      console.log('✅ Video metadata cargado:', videos[0])
+                    }
+                  }}
                   onMouseEnter={(e) => {
                     if (!isVideoPlaying) {
                       e.currentTarget.play().catch(() => {
@@ -173,8 +201,8 @@ export function ObraCard({ obra, index }: ObraCardProps) {
       </motion.div>
       {galleryOpen && (
         <MixedGalleryLightbox
-          images={obra.images || []}
-          videos={obra.videos || []}
+          images={images}
+          videos={videos}
           initialIndex={0}
           initialType={hasImages ? 'image' : 'video'}
           onClose={() => setGalleryOpen(false)}
