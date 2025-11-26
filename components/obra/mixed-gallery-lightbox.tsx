@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { X, ChevronLeft, ChevronRight, Video as VideoIcon } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, Video as VideoIcon, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
 import { isSupabaseUrl } from '@/lib/utils/storage'
@@ -136,6 +136,20 @@ export function MixedGalleryLightbox({
         <div className="absolute top-4 left-4 right-4 z-10">
           <div className="flex items-start justify-between gap-4 mb-3">
             <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onClose()
+                  }}
+                  className="text-white hover:bg-white/20 flex items-center gap-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Volver
+                </Button>
+              </div>
               {title && (
                 <h3 className="text-white text-xl font-semibold mb-2">{title}</h3>
               )}
