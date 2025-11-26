@@ -43,25 +43,32 @@ export function ObraFormImproved({ obra }: ObraFormProps) {
   const videos = watch('videos')
 
   const onSubmit = async (data: ObraFormData) => {
+    // Asegurar que images y videos siempre sean arrays
+    const obraData = {
+      ...data,
+      images: data.images || [],
+      videos: data.videos || [],
+    }
+
     // Debug logging en desarrollo
     console.log('🔍 ObraForm Submit Debug:', {
-      title: data.title,
-      imagesCount: data.images?.length || 0,
-      videosCount: data.videos?.length || 0,
-      images: data.images,
-      videos: data.videos,
-      videosType: typeof data.videos,
-      isVideosArray: Array.isArray(data.videos),
+      title: obraData.title,
+      imagesCount: obraData.images.length,
+      videosCount: obraData.videos.length,
+      images: obraData.images,
+      videos: obraData.videos,
+      videosType: typeof obraData.videos,
+      isVideosArray: Array.isArray(obraData.videos),
       isUpdate: !!obra,
-      formData: data,
+      formData: obraData,
     })
 
     try {
       if (obra) {
-        await updateObra(obra.id, data)
+        await updateObra(obra.id, obraData)
         toast.success('Obra actualizada correctamente')
       } else {
-        await createObra(data)
+        await createObra(obraData)
         toast.success('Obra creada correctamente')
       }
       router.push('/admin/obras')

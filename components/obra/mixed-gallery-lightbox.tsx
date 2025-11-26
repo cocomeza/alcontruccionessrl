@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import Image from 'next/image'
 import { X, ChevronLeft, ChevronRight, Video as VideoIcon, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -31,11 +31,11 @@ export function MixedGalleryLightbox({
   title,
   description,
 }: MixedGalleryLightboxProps) {
-  // Combinar imágenes y videos en un solo array
-  const mediaItems: MediaItem[] = [
+  // Combinar imágenes y videos en un solo array (usando useMemo para evitar recrear en cada render)
+  const mediaItems: MediaItem[] = useMemo(() => [
     ...images.map((url) => ({ type: 'image' as const, url })),
     ...videos.map((url) => ({ type: 'video' as const, url })),
-  ]
+  ], [images, videos])
 
   const [currentIndex, setCurrentIndex] = useState(() => {
     if (initialType === 'image') {
@@ -48,6 +48,27 @@ export function MixedGalleryLightbox({
   const [videoDuration, setVideoDuration] = useState<number>(0)
   const [currentTime, setCurrentTime] = useState<number>(0)
   const videoRef = useRef<HTMLVideoElement>(null)
+
+  const handlePrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev === 0 ? mediaItems.length - 1 : prev - 1))
+    setIsPlaying(false)
+  }, [mediaItems.length])
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev === mediaItems.length - 1 ? 0 : prev + 1))
+    setIsPlaying(false)
+  }, [mediaItems.length])
+
+  const togglePlay = useCallback(() => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause()
+      } else {
+        videoRef.current.play()
+      }
+      setIsPlaying(!isPlaying)
+    }
+  }, [isPlaying])
 
   useEffect(() => {
     setCurrentIndex(() => {
@@ -81,7 +102,7 @@ export function MixedGalleryLightbox({
       document.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = 'unset'
     }
-  }, [currentIndex])
+  }, [currentIndex, handleNext, handlePrevious, mediaItems, onClose, togglePlay])
 
   useEffect(() => {
     // Pausar video anterior cuando cambia el índice
@@ -93,27 +114,6 @@ export function MixedGalleryLightbox({
       setVideoDuration(0)
     }
   }, [currentIndex])
-
-  const handlePrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? mediaItems.length - 1 : prev - 1))
-    setIsPlaying(false)
-  }
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev === mediaItems.length - 1 ? 0 : prev + 1))
-    setIsPlaying(false)
-  }
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause()
-      } else {
-        videoRef.current.play()
-      }
-      setIsPlaying(!isPlaying)
-    }
-  }
 
   const handlePlay = () => {
     setIsPlaying(true)

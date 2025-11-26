@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -17,6 +17,16 @@ interface ImageLightboxProps {
 export function ImageLightbox({ images, initialIndex = 0, onClose, title }: ImageLightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex)
   const [zoom, setZoom] = useState(1)
+
+  const handlePrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
+    setZoom(1)
+  }, [images.length])
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
+    setZoom(1)
+  }, [images.length])
 
   useEffect(() => {
     setCurrentIndex(initialIndex)
@@ -41,17 +51,7 @@ export function ImageLightbox({ images, initialIndex = 0, onClose, title }: Imag
       document.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = 'unset'
     }
-  }, [currentIndex])
-
-  const handlePrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
-    setZoom(1)
-  }
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
-    setZoom(1)
-  }
+  }, [currentIndex, handleNext, handlePrevious, onClose])
 
   const handleZoomIn = () => {
     setZoom((prev) => Math.min(prev + 0.25, 3))

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { X, ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -17,6 +17,27 @@ export function VideoLightbox({ videos, initialIndex = 0, onClose, title }: Vide
   const [currentIndex, setCurrentIndex] = useState(initialIndex)
   const [isPlaying, setIsPlaying] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
+
+  const handlePrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev === 0 ? videos.length - 1 : prev - 1))
+    setIsPlaying(false)
+  }, [videos.length])
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev === videos.length - 1 ? 0 : prev + 1))
+    setIsPlaying(false)
+  }, [videos.length])
+
+  const togglePlay = useCallback(() => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause()
+      } else {
+        videoRef.current.play()
+      }
+      setIsPlaying(!isPlaying)
+    }
+  }, [isPlaying])
 
   useEffect(() => {
     setCurrentIndex(initialIndex)
@@ -44,7 +65,7 @@ export function VideoLightbox({ videos, initialIndex = 0, onClose, title }: Vide
       document.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = 'unset'
     }
-  }, [currentIndex])
+  }, [currentIndex, handleNext, handlePrevious, onClose, togglePlay])
 
   useEffect(() => {
     // Pausar video anterior cuando cambia el índice
@@ -54,27 +75,6 @@ export function VideoLightbox({ videos, initialIndex = 0, onClose, title }: Vide
       setIsPlaying(false)
     }
   }, [currentIndex])
-
-  const handlePrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? videos.length - 1 : prev - 1))
-    setIsPlaying(false)
-  }
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev === videos.length - 1 ? 0 : prev + 1))
-    setIsPlaying(false)
-  }
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause()
-      } else {
-        videoRef.current.play()
-      }
-      setIsPlaying(!isPlaying)
-    }
-  }
 
   const handlePlay = () => {
     setIsPlaying(true)

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -181,7 +182,7 @@ export function Uploader({ type, onUploadComplete, existingUrls = [] }: Uploader
         {files.length > 0 && (
           <p className="text-sm text-muted-foreground">
             {files.length} {type === 'image' ? 'imagen' : 'video'}{files.length > 1 ? 'es' : ''} seleccionado{files.length > 1 ? 's' : ''}. 
-            Haz clic en "Subir" para cargar {files.length > 1 ? 'los archivos' : 'el archivo'} a Supabase Storage.
+            Haz clic en &quot;Subir&quot; para cargar {files.length > 1 ? 'los archivos' : 'el archivo'} a Supabase Storage.
           </p>
         )}
       </div>
@@ -226,10 +227,12 @@ export function Uploader({ type, onUploadComplete, existingUrls = [] }: Uploader
             >
               {type === 'image' && previews[index] ? (
                 <div className="relative aspect-square rounded-lg overflow-hidden border">
-                  <img
+                  <Image
                     src={previews[index]}
                     alt={file.name}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    unoptimized
                   />
                   <Button
                     type="button"
@@ -281,10 +284,12 @@ export function Uploader({ type, onUploadComplete, existingUrls = [] }: Uploader
               >
                 {type === 'image' ? (
                   <div className="relative aspect-square rounded-lg overflow-hidden border">
-                    <img
+                    <Image
                       src={url}
                       alt={`Uploaded ${index + 1}`}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      unoptimized
                     />
                     <Button
                       type="button"

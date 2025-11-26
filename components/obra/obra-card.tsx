@@ -39,6 +39,7 @@ export function ObraCard({ obra, index }: ObraCardProps) {
       hasImages,
       hasVideos,
       showVideo,
+      hasMedia,
       imagesCount: images.length,
       videosCount: videos.length,
       imageError,
@@ -49,8 +50,6 @@ export function ObraCard({ obra, index }: ObraCardProps) {
       videosType: typeof obra.videos,
       isImagesArray: Array.isArray(obra.images),
       isVideosArray: Array.isArray(obra.videos),
-      showVideo,
-      hasMedia,
     })
   }
 
