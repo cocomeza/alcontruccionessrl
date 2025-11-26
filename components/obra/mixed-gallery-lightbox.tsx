@@ -184,71 +184,81 @@ export function MixedGalleryLightbox({
           </div>
         </div>
 
-        {/* Contenido */}
+        {/* Contenido - Carrusel */}
         <div
-          className="relative w-full h-full flex items-center justify-center p-4 pt-24"
+          className="relative w-full h-full flex items-center justify-center p-4 pt-24 pb-32"
           onClick={(e) => e.stopPropagation()}
         >
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.2 }}
-            className="relative max-w-full max-h-full"
-          >
-            {currentItem.type === 'image' ? (
-              <div className="relative max-w-full max-h-[90vh]">
-                <Image
-                  src={currentItem.url}
-                  alt={`${title || 'Imagen'} - ${currentIndex + 1}`}
-                  width={1200}
-                  height={800}
-                  className="max-w-full max-h-[90vh] object-contain"
-                  priority
-                  unoptimized={isSupabaseUrl(currentItem.url)}
-                  onError={() => {
-                    if (process.env.NODE_ENV === 'development') {
-                      console.error('Error cargando imagen en lightbox:', {
-                        index: currentIndex,
-                        url: currentItem.url,
-                      })
-                    }
-                  }}
-                />
-              </div>
-            ) : (
-              <div className="aspect-video w-full max-w-6xl bg-black">
-                <video
-                  ref={videoRef}
-                  src={currentItem.url}
-                  controls
-                  className="w-full h-full"
-                  preload="metadata"
-                  playsInline
-                  crossOrigin="anonymous"
-                  onPlay={handlePlay}
-                  onPause={handlePause}
-                  onError={() => {
-                    if (process.env.NODE_ENV === 'development') {
-                      console.error('Error cargando video en lightbox:', {
-                        index: currentIndex,
-                        url: currentItem.url,
-                      })
-                    }
-                  }}
-                >
-                  <source src={currentItem.url} type="video/mp4" />
-                  <source src={currentItem.url} type="video/webm" />
-                  <source src={currentItem.url} type="video/ogg" />
-                  Tu navegador no soporta videos HTML5.
-                </video>
-              </div>
-            )}
-          </motion.div>
+          {/* Contenedor del carrusel */}
+          <div className="relative w-full h-full overflow-hidden">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={currentIndex}
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -100 }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 300,
+                  damping: 30,
+                  duration: 0.3,
+                }}
+                className="absolute inset-0 flex items-center justify-center px-4"
+              >
+                {currentItem.type === 'image' ? (
+                  <div className="relative max-w-full max-h-[85vh]">
+                    <Image
+                      src={currentItem.url}
+                      alt={`${title || 'Imagen'} - ${currentIndex + 1}`}
+                      width={1200}
+                      height={800}
+                      className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+                      priority
+                      unoptimized={isSupabaseUrl(currentItem.url)}
+                      onError={() => {
+                        if (process.env.NODE_ENV === 'development') {
+                          console.error('Error cargando imagen en lightbox:', {
+                            index: currentIndex,
+                            url: currentItem.url,
+                          })
+                        }
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="aspect-video w-full max-w-6xl bg-black rounded-lg overflow-hidden shadow-2xl">
+                    <video
+                      ref={videoRef}
+                      src={currentItem.url}
+                      controls
+                      className="w-full h-full"
+                      preload="metadata"
+                      playsInline
+                      crossOrigin="anonymous"
+                      onPlay={handlePlay}
+                      onPause={handlePause}
+                      onError={() => {
+                        if (process.env.NODE_ENV === 'development') {
+                          console.error('Error cargando video en lightbox:', {
+                            index: currentIndex,
+                            url: currentItem.url,
+                          })
+                        }
+                      }}
+                    >
+                      <source src={currentItem.url} type="video/mp4" />
+                      <source src={currentItem.url} type="video/webm" />
+                      <source src={currentItem.url} type="video/ogg" />
+                      Tu navegador no soporta videos HTML5.
+                    </video>
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
 
-        {/* Controles de navegación */}
+        {/* Controles de navegación - Mejorados */}
         {mediaItems.length > 1 && (
           <>
             <Button
@@ -258,9 +268,10 @@ export function MixedGalleryLightbox({
                 e.stopPropagation()
                 handlePrevious()
               }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 h-12 w-12"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/30 bg-black/50 backdrop-blur-sm h-14 w-14 rounded-full transition-all hover:scale-110 z-20"
+              aria-label="Imagen anterior"
             >
-              <ChevronLeft className="h-6 w-6" />
+              <ChevronLeft className="h-7 w-7" />
             </Button>
             <Button
               variant="ghost"
@@ -269,61 +280,73 @@ export function MixedGalleryLightbox({
                 e.stopPropagation()
                 handleNext()
               }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 h-12 w-12"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/30 bg-black/50 backdrop-blur-sm h-14 w-14 rounded-full transition-all hover:scale-110 z-20"
+              aria-label="Imagen siguiente"
             >
-              <ChevronRight className="h-6 w-6" />
+              <ChevronRight className="h-7 w-7" />
             </Button>
           </>
         )}
 
-        {/* Indicador */}
+        {/* Indicador mejorado */}
         {mediaItems.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm bg-black/70 px-4 py-2 rounded">
-            {currentIndex + 1} / {mediaItems.length}
+          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 text-white text-sm bg-black/80 backdrop-blur-sm px-6 py-2 rounded-full flex items-center gap-2 z-10">
+            <span className="font-semibold">{currentIndex + 1}</span>
+            <span className="text-white/60">de</span>
+            <span className="font-semibold">{mediaItems.length}</span>
           </div>
         )}
 
-        {/* Miniaturas inferiores */}
+        {/* Miniaturas inferiores - Carrusel mejorado */}
         {mediaItems.length > 1 && (
-          <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-2 max-w-full overflow-x-auto px-4">
-            {mediaItems.map((item, index) => (
-              <button
-                key={index}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setCurrentIndex(index)
-                  setIsPlaying(false)
-                }}
-                className={`relative flex-shrink-0 rounded overflow-hidden border-2 transition-all ${
-                  index === currentIndex
-                    ? 'border-white scale-110'
-                    : 'border-transparent opacity-60 hover:opacity-100'
-                } ${item.type === 'image' ? 'w-16 h-16' : 'w-24 h-16'}`}
-              >
-                {item.type === 'image' ? (
-                  <Image
-                    src={item.url}
-                    alt={`Miniatura ${index + 1}`}
-                    fill
-                    className="object-cover"
-                    sizes="64px"
-                    unoptimized={isSupabaseUrl(item.url)}
-                  />
-                ) : (
-                  <>
-                    <video
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
+            <div className="flex gap-3 max-w-[90vw] overflow-x-auto px-4 py-2 scrollbar-hide">
+              {mediaItems.map((item, index) => (
+                <motion.button
+                  key={index}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setCurrentIndex(index)
+                    setIsPlaying(false)
+                  }}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`relative flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all shadow-lg ${
+                    index === currentIndex
+                      ? 'border-white ring-2 ring-white/50 scale-110'
+                      : 'border-white/30 opacity-70 hover:opacity-100 hover:border-white/60'
+                  } ${item.type === 'image' ? 'w-20 h-20' : 'w-28 h-20'}`}
+                  aria-label={`Ver ${item.type === 'image' ? 'imagen' : 'video'} ${index + 1}`}
+                >
+                  {item.type === 'image' ? (
+                    <Image
                       src={item.url}
-                      className="w-full h-full object-cover"
-                      preload="metadata"
-                      muted
+                      alt={`Miniatura ${index + 1}`}
+                      fill
+                      className="object-cover"
+                      sizes="80px"
+                      unoptimized={isSupabaseUrl(item.url)}
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                      <VideoIcon className="h-4 w-4 text-white" />
-                    </div>
-                  </>
-                )}
-              </button>
-            ))}
+                  ) : (
+                    <>
+                      <video
+                        src={item.url}
+                        className="w-full h-full object-cover"
+                        preload="metadata"
+                        muted
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                        <VideoIcon className="h-5 w-5 text-white" />
+                      </div>
+                    </>
+                  )}
+                  {/* Indicador de posición activa */}
+                  {index === currentIndex && (
+                    <div className="absolute inset-0 border-2 border-white rounded-lg" />
+                  )}
+                </motion.button>
+              ))}
+            </div>
           </div>
         )}
       </motion.div>

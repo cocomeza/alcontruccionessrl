@@ -3,6 +3,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ErrorBoundary } from "@/components/common/error-boundary";
 import { ThemeProvider } from "@/components/layout/theme-provider";
+import { WhatsAppFloating } from "@/components/common/whatsapp-floating";
 
 export const metadata: Metadata = {
   title: "ALCONSTRUCCIONES SRL - Portfolio de Obras",
@@ -33,6 +34,7 @@ export default function RootLayout({
           <ErrorBoundary>
             {children}
             <Toaster position="top-right" richColors />
+            <WhatsAppFloating />
           </ErrorBoundary>
         </ThemeProvider>
       </body>

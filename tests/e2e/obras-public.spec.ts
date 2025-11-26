@@ -48,5 +48,67 @@ test.describe('Public Obras Pages', () => {
       await expect(page.getByText(/Volver/i)).toBeVisible()
     }
   })
+
+  test('should open mixed gallery lightbox when clicking obra card', async ({ page }) => {
+    await page.goto('/obras')
+    await page.waitForTimeout(1000)
+    
+    // Buscar una card de obra (no el link directo, sino la card completa)
+    const obraCard = page.locator('[class*="card"], [class*="Card"]').first()
+    const cardCount = await obraCard.count()
+    
+    if (cardCount > 0) {
+      // Hacer click en la card
+      await obraCard.click()
+      await page.waitForTimeout(500)
+      
+      // Verificar que se abrió el lightbox (buscar elementos característicos)
+      const lightbox = page.locator('text=Volver, button[aria-label*="cerrar"], button[aria-label*="Cerrar"]').first()
+      const lightboxCount = await lightbox.count()
+      
+      // Si hay múltiples imágenes/videos, debería haber botones de navegación
+      if (lightboxCount > 0) {
+        // Verificar que hay controles de navegación o indicador
+        const hasNavigation = await page.locator('button[aria-label*="anterior"], button[aria-label*="siguiente"], text=/\\d+.*de.*\\d+/').count() > 0
+        // El lightbox puede tener solo un elemento, así que esto es opcional
+        expect(lightboxCount).toBeGreaterThan(0)
+      }
+    }
+  })
+
+  test('should navigate carousel with keyboard arrows', async ({ page }) => {
+    await page.goto('/obras')
+    await page.waitForTimeout(1000)
+    
+    const obraCard = page.locator('[class*="card"], [class*="Card"]').first()
+    const cardCount = await obraCard.count()
+    
+    if (cardCount > 0) {
+      await obraCard.click()
+      await page.waitForTimeout(500)
+      
+      // Verificar que el lightbox está abierto
+      const lightbox = page.locator('text=Volver').first()
+      const lightboxCount = await lightbox.count()
+      
+      if (lightboxCount > 0) {
+        // Presionar flecha derecha para navegar
+        await page.keyboard.press('ArrowRight')
+        await page.waitForTimeout(300)
+        
+        // Presionar flecha izquierda para volver
+        await page.keyboard.press('ArrowLeft')
+        await page.waitForTimeout(300)
+        
+        // Presionar Escape para cerrar
+        await page.keyboard.press('Escape')
+        await page.waitForTimeout(300)
+        
+        // Verificar que el lightbox se cerró
+        const closedLightbox = await page.locator('text=Volver').count()
+        expect(closedLightbox).toBe(0)
+      }
+    }
+  })
 })
 

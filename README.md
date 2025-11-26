@@ -44,7 +44,11 @@ Edita `.env.local` con tus credenciales de Supabase:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=tu_url_de_supabase
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_clave_anonima
+NEXT_PUBLIC_WHATSAPP_NUMBER=+5491123456789  # Opcional: número de WhatsApp con código de país
+NEXT_PUBLIC_WHATSAPP_MESSAGE=Hola, me interesa conocer más sobre sus servicios de construcción.  # Opcional: mensaje predeterminado
 ```
+
+**Nota**: Si no configuras las variables de WhatsApp, puedes editar directamente `lib/config/whatsapp.ts` con tu número y mensaje.
 
 ## 🗄️ Configuración de Supabase
 
@@ -109,10 +113,11 @@ npm run test:unit
 npm run test -- --coverage
 ```
 
-**Cobertura actual**: 84 tests pasando ✅
-- Unit tests: Componentes, schemas, utils
+**Cobertura actual**: 109+ tests pasando ✅
+- Unit tests: Componentes (WhatsApp, Footer, Gallery), schemas, utils
 - Integration tests: Auth, obras, UI components
 - Snapshot tests: Componentes visuales
+- E2E tests: Flujos completos, WhatsApp, galería mixta
 
 ### Tests E2E (Playwright)
 ```bash
@@ -125,6 +130,8 @@ npm run test:e2e:ui
 
 **Tests E2E incluidos**:
 - Flujo completo de login y CRUD
+- WhatsApp button (visibilidad, URL, navegación)
+- Galería mixta (carrusel de imágenes y videos)
 - Accesibilidad (axe-core)
 - Performance
 - Responsive design
@@ -334,6 +341,8 @@ Los componentes están organizados por funcionalidad para facilitar la navegaci�
      NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_clave_anonima
      RESEND_API_KEY=opcional (para emails de contacto)
      CONTACT_EMAIL=opcional (email de destino para contacto)
+     NEXT_PUBLIC_WHATSAPP_NUMBER=opcional (ej: +5491123456789)
+     NEXT_PUBLIC_WHATSAPP_MESSAGE=opcional (mensaje predeterminado)
      ```
 
 3. **Desplegar**
