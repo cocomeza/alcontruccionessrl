@@ -45,6 +45,8 @@ export function MixedGalleryLightbox({
     }
   })
   const [isPlaying, setIsPlaying] = useState(false)
+  const [videoDuration, setVideoDuration] = useState<number>(0)
+  const [currentTime, setCurrentTime] = useState<number>(0)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
@@ -87,6 +89,8 @@ export function MixedGalleryLightbox({
       videoRef.current.pause()
       videoRef.current.currentTime = 0
       setIsPlaying(false)
+      setCurrentTime(0)
+      setVideoDuration(0)
     }
   }, [currentIndex])
 
@@ -117,6 +121,25 @@ export function MixedGalleryLightbox({
 
   const handlePause = () => {
     setIsPlaying(false)
+  }
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      setCurrentTime(videoRef.current.currentTime)
+    }
+  }
+
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      setVideoDuration(videoRef.current.duration)
+    }
+  }
+
+  const formatTime = (seconds: number): string => {
+    if (isNaN(seconds)) return '0:00'
+    const mins = Math.floor(seconds / 60)
+    const secs = Math.floor(seconds % 60)
+    return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
   if (mediaItems.length === 0) return null
@@ -226,17 +249,20 @@ export function MixedGalleryLightbox({
                     />
                   </div>
                 ) : (
-                  <div className="aspect-video w-full max-w-6xl bg-black rounded-lg overflow-hidden shadow-2xl">
+                  <div className="aspect-video w-full max-w-6xl bg-black rounded-lg overflow-hidden shadow-2xl relative group">
                     <video
                       ref={videoRef}
                       src={currentItem.url}
                       controls
+                      controlsList="nodownload"
                       className="w-full h-full"
                       preload="metadata"
                       playsInline
                       crossOrigin="anonymous"
                       onPlay={handlePlay}
                       onPause={handlePause}
+                      onTimeUpdate={handleTimeUpdate}
+                      onLoadedMetadata={handleLoadedMetadata}
                       onError={() => {
                         if (process.env.NODE_ENV === 'development') {
                           console.error('Error cargando video en lightbox:', {
@@ -251,6 +277,12 @@ export function MixedGalleryLightbox({
                       <source src={currentItem.url} type="video/ogg" />
                       Tu navegador no soporta videos HTML5.
                     </video>
+                    {/* Información de duración del video */}
+                    {videoDuration > 0 && (
+                      <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded text-sm font-mono backdrop-blur-sm">
+                        {formatTime(currentTime)} / {formatTime(videoDuration)}
+                      </div>
+                    )}
                   </div>
                 )}
               </motion.div>
