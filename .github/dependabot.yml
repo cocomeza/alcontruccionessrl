@@ -36,6 +36,9 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "next"
         update-types: ["version-update:semver-major"]
+      # TailwindCSS 4.x requiere cambios en PostCSS - revisar manualmente
+      - dependency-name: "tailwindcss"
+        update-types: ["version-update:semver-major"]
 
   # Actualizar dependencias de GitHub Actions
   - package-ecosystem: "github-actions"
