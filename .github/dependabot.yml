@@ -1,0 +1,45 @@
+# Configuración de Dependabot para actualizaciones automáticas de dependencias
+# Dependabot creará PRs automáticamente cuando haya actualizaciones disponibles
+
+version: 2
+updates:
+  # Actualizar dependencias de npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"  # Revisar cada semana
+      day: "monday"       # Los lunes
+      time: "09:00"       # A las 9 AM
+    open-pull-requests-limit: 10
+    reviewers:
+      - "mezac"  # Cambia por tu usuario de GitHub
+    labels:
+      - "dependencies"
+      - "security"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    # Agrupar actualizaciones relacionadas
+    groups:
+      production-dependencies:
+        dependency-type: "production"
+      development-dependencies:
+        dependency-type: "development"
+    # Actualizar automáticamente solo parches y menores
+    versioning-strategy: increase
+    # Ignorar actualizaciones mayores automáticamente (requieren revisión manual)
+    ignore:
+      # Actualizaciones mayores de React requieren revisión manual
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+
+  # Actualizar dependencias de GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+

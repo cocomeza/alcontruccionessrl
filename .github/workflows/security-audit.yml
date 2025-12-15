@@ -1,0 +1,47 @@
+# Workflow para verificar vulnerabilidades de seguridad automáticamente
+# Se ejecuta diariamente y en cada push
+
+name: Security Audit
+
+on:
+  schedule:
+    # Ejecutar diariamente a las 6 AM UTC
+    - cron: '0 6 * * *'
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  workflow_dispatch: # Permite ejecución manual
+
+jobs:
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Ejecutar auditoría de seguridad
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Verificar dependencias desactualizadas
+        run: npm outdated || true
+
+      - name: Reportar vulnerabilidades críticas
+        if: failure()
+        run: |
+          echo "⚠️ Se encontraron vulnerabilidades de seguridad"
+          echo "Ejecuta 'npm audit fix' para resolverlas automáticamente"
+          exit 1
+
