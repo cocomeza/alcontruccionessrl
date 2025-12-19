@@ -6,6 +6,7 @@ import { X, ChevronLeft, ChevronRight, Video as VideoIcon, ArrowLeft } from 'luc
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
 import { isSupabaseUrl } from '@/lib/utils/storage'
+import { VideoPlayer } from './video-player'
 
 interface MediaItem {
   type: 'image' | 'video'
@@ -45,9 +46,6 @@ export function MixedGalleryLightbox({
     }
   })
   const [isPlaying, setIsPlaying] = useState(false)
-  const [videoDuration, setVideoDuration] = useState<number>(0)
-  const [currentTime, setCurrentTime] = useState<number>(0)
-  const videoRef = useRef<HTMLVideoElement>(null)
 
   const handlePrevious = useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? mediaItems.length - 1 : prev - 1))
@@ -59,16 +57,13 @@ export function MixedGalleryLightbox({
     setIsPlaying(false)
   }, [mediaItems.length])
 
-  const togglePlay = useCallback(() => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause()
-      } else {
-        videoRef.current.play()
-      }
-      setIsPlaying(!isPlaying)
-    }
-  }, [isPlaying])
+  const handleVideoPlay = useCallback(() => {
+    setIsPlaying(true)
+  }, [])
+
+  const handleVideoPause = useCallback(() => {
+    setIsPlaying(false)
+  }, [])
 
   useEffect(() => {
     setCurrentIndex(() => {
@@ -91,7 +86,7 @@ export function MixedGalleryLightbox({
         handleNext()
       } else if (e.key === ' ' && mediaItems[currentIndex]?.type === 'video') {
         e.preventDefault()
-        togglePlay()
+        // El VideoPlayer maneja el espacio internamente
       }
     }
 
@@ -102,45 +97,13 @@ export function MixedGalleryLightbox({
       document.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = 'unset'
     }
-  }, [currentIndex, handleNext, handlePrevious, mediaItems, onClose, togglePlay])
+  }, [currentIndex, handleNext, handlePrevious, mediaItems, onClose])
 
   useEffect(() => {
     // Pausar video anterior cuando cambia el índice
-    if (videoRef.current) {
-      videoRef.current.pause()
-      videoRef.current.currentTime = 0
-      setIsPlaying(false)
-      setCurrentTime(0)
-      setVideoDuration(0)
-    }
+    setIsPlaying(false)
   }, [currentIndex])
 
-  const handlePlay = () => {
-    setIsPlaying(true)
-  }
-
-  const handlePause = () => {
-    setIsPlaying(false)
-  }
-
-  const handleTimeUpdate = () => {
-    if (videoRef.current) {
-      setCurrentTime(videoRef.current.currentTime)
-    }
-  }
-
-  const handleLoadedMetadata = () => {
-    if (videoRef.current) {
-      setVideoDuration(videoRef.current.duration)
-    }
-  }
-
-  const formatTime = (seconds: number): string => {
-    if (isNaN(seconds)) return '0:00'
-    const mins = Math.floor(seconds / 60)
-    const secs = Math.floor(seconds % 60)
-    return `${mins}:${secs.toString().padStart(2, '0')}`
-  }
 
   if (mediaItems.length === 0) return null
 
@@ -249,40 +212,23 @@ export function MixedGalleryLightbox({
                     />
                   </div>
                 ) : (
-                  <div className="aspect-video w-full max-w-6xl bg-black rounded-lg overflow-hidden shadow-2xl relative group">
-                    <video
-                      ref={videoRef}
+                  <div className="aspect-video w-full max-w-6xl bg-black rounded-lg overflow-hidden shadow-2xl relative">
+                    <VideoPlayer
                       src={currentItem.url}
-                      controls
-                      controlsList="nodownload"
-                      className="w-full h-full"
-                      preload="metadata"
-                      playsInline
-                      crossOrigin="anonymous"
-                      onPlay={handlePlay}
-                      onPause={handlePause}
-                      onTimeUpdate={handleTimeUpdate}
-                      onLoadedMetadata={handleLoadedMetadata}
-                      onError={() => {
+                      onPlay={handleVideoPlay}
+                      onPause={handleVideoPause}
+                      onError={(error) => {
                         if (process.env.NODE_ENV === 'development') {
                           console.error('Error cargando video en lightbox:', {
                             index: currentIndex,
                             url: currentItem.url,
+                            error,
                           })
                         }
                       }}
-                    >
-                      <source src={currentItem.url} type="video/mp4" />
-                      <source src={currentItem.url} type="video/webm" />
-                      <source src={currentItem.url} type="video/ogg" />
-                      Tu navegador no soporta videos HTML5.
-                    </video>
-                    {/* Información de duración del video */}
-                    {videoDuration > 0 && (
-                      <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded text-sm font-mono backdrop-blur-sm">
-                        {formatTime(currentTime)} / {formatTime(videoDuration)}
-                      </div>
-                    )}
+                      className="w-full h-full"
+                      showControls={true}
+                    />
                   </div>
                 )}
               </motion.div>

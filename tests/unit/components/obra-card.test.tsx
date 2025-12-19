@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ObraCard } from '@/components/obra/obra-card'
 import type { Obra } from '@/lib/types/database'
@@ -104,9 +104,10 @@ describe('ObraCard', () => {
       expect(video).toHaveAttribute('preload', 'metadata')
       expect(video).toHaveAttribute('playsinline')
       expect(video).toHaveAttribute('crossorigin', 'anonymous')
-      // muted y loop pueden estar como atributos booleanos (sin valor)
-      expect(video.hasAttribute('muted')).toBe(true)
-      expect(video.hasAttribute('loop')).toBe(true)
+      // muted y loop son atributos booleanos en React
+      // En el DOM pueden aparecer como atributos vacíos o como propiedades
+      expect(video.muted).toBe(true)
+      expect(video.loop).toBe(true)
     }
   })
 
@@ -152,7 +153,6 @@ describe('ObraCard', () => {
   })
 
   it('should handle video play on hover', async () => {
-    const user = userEvent.setup()
     const playSpy = vi.fn().mockResolvedValue(undefined)
     const pauseSpy = vi.fn()
     
@@ -167,26 +167,18 @@ describe('ObraCard', () => {
     const video = container.querySelector('video') as HTMLVideoElement
     expect(video).toBeInTheDocument()
     
-    // Mock play y pause
     if (video) {
+      // Mock play y pause en el elemento específico
       video.play = playSpy
       video.pause = pauseSpy
       
-      // Simular hover usando eventos del mouse
-      const card = container.querySelector('[class*="group"]')
-      if (card) {
-        // Simular mouseenter
-        const mouseEnterEvent = new MouseEvent('mouseenter', {
-          bubbles: true,
-          cancelable: true,
-        })
-        card.dispatchEvent(mouseEnterEvent)
-        
-        // Esperar a que el evento se procese
-        await waitFor(() => {
-          expect(playSpy).toHaveBeenCalled()
-        }, { timeout: 1000 })
-      }
+      // Simular mouseenter directamente en el video usando fireEvent
+      fireEvent.mouseEnter(video)
+      
+      // Esperar a que el evento se procese
+      await waitFor(() => {
+        expect(playSpy).toHaveBeenCalled()
+      }, { timeout: 1000 })
     }
   })
 
@@ -197,7 +189,15 @@ describe('ObraCard', () => {
   })
 
   it('should have link to obra detail page', () => {
-    render(<ObraCard obra={mockObra} index={0} />)
+    // Si la obra tiene media (imágenes o videos), el link será '#' porque abre la galería
+    // Si no tiene media, el link será al detalle de la obra
+    const obraWithoutMedia: Obra = {
+      ...mockObra,
+      images: [],
+      videos: [],
+    }
+    
+    render(<ObraCard obra={obraWithoutMedia} index={0} />)
     
     const link = screen.getByRole('link')
     expect(link).toHaveAttribute('href', '/obra/1')

@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { X, ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { X, ChevronLeft, ChevronRight, VideoIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
 import { isSupabaseUrl } from '@/lib/utils/storage'
+import { VideoPlayer } from './video-player'
 
 interface VideoLightboxProps {
   videos: string[]
@@ -16,7 +17,6 @@ interface VideoLightboxProps {
 export function VideoLightbox({ videos, initialIndex = 0, onClose, title }: VideoLightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex)
   const [isPlaying, setIsPlaying] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
 
   const handlePrevious = useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? videos.length - 1 : prev - 1))
@@ -28,16 +28,13 @@ export function VideoLightbox({ videos, initialIndex = 0, onClose, title }: Vide
     setIsPlaying(false)
   }, [videos.length])
 
-  const togglePlay = useCallback(() => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause()
-      } else {
-        videoRef.current.play()
-      }
-      setIsPlaying(!isPlaying)
-    }
-  }, [isPlaying])
+  const handleVideoPlay = useCallback(() => {
+    setIsPlaying(true)
+  }, [])
+
+  const handleVideoPause = useCallback(() => {
+    setIsPlaying(false)
+  }, [])
 
   useEffect(() => {
     setCurrentIndex(initialIndex)
@@ -54,7 +51,7 @@ export function VideoLightbox({ videos, initialIndex = 0, onClose, title }: Vide
         handleNext()
       } else if (e.key === ' ') {
         e.preventDefault()
-        togglePlay()
+        // El VideoPlayer maneja el espacio internamente
       }
     }
 
@@ -65,24 +62,12 @@ export function VideoLightbox({ videos, initialIndex = 0, onClose, title }: Vide
       document.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = 'unset'
     }
-  }, [currentIndex, handleNext, handlePrevious, onClose, togglePlay])
+  }, [currentIndex, handleNext, handlePrevious, onClose])
 
   useEffect(() => {
     // Pausar video anterior cuando cambia el índice
-    if (videoRef.current) {
-      videoRef.current.pause()
-      videoRef.current.currentTime = 0
-      setIsPlaying(false)
-    }
-  }, [currentIndex])
-
-  const handlePlay = () => {
-    setIsPlaying(true)
-  }
-
-  const handlePause = () => {
     setIsPlaying(false)
-  }
+  }, [currentIndex])
 
   if (videos.length === 0) return null
 
@@ -127,31 +112,23 @@ export function VideoLightbox({ videos, initialIndex = 0, onClose, title }: Vide
             className="relative max-w-full max-h-full"
           >
             <div className="aspect-video w-full max-w-6xl bg-black relative">
-              <video
-                ref={videoRef}
+              <VideoPlayer
                 src={videos[currentIndex]}
-                controls
-                className="w-full h-full"
-                preload="metadata"
-                playsInline
-                crossOrigin="anonymous"
-                onPlay={handlePlay}
-                onPause={handlePause}
-                onError={() => {
+                onPlay={handleVideoPlay}
+                onPause={handleVideoPause}
+                onError={(error) => {
                   if (process.env.NODE_ENV === 'development') {
                     console.error('Error cargando video en lightbox:', {
                       index: currentIndex,
                       url: videos[currentIndex],
                       isSupabase: isSupabaseUrl(videos[currentIndex]),
+                      error,
                     })
                   }
                 }}
-              >
-                <source src={videos[currentIndex]} type="video/mp4" />
-                <source src={videos[currentIndex]} type="video/webm" />
-                <source src={videos[currentIndex]} type="video/ogg" />
-                Tu navegador no soporta videos HTML5.
-              </video>
+                className="w-full h-full"
+                showControls={true}
+              />
             </div>
           </motion.div>
         </div>
@@ -216,7 +193,7 @@ export function VideoLightbox({ videos, initialIndex = 0, onClose, title }: Vide
                 />
                 {index === currentIndex && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                    <Play className="h-4 w-4 text-white" fill="currentColor" />
+                    <VideoIcon className="h-4 w-4 text-white" />
                   </div>
                 )}
               </button>
