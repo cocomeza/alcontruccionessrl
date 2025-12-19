@@ -36,7 +36,17 @@ Ejecutar después de `setup.sql`. Agrega:
 - `ampliacion` - Ampliación
 - `otros` - Otros
 
-### 3. `migracion-categorias.sql`
+### 3. `add-featured-column.sql`
+**Script para agregar columna featured**
+
+Ejecutar después de `categorias.sql`. Agrega:
+- Columna `featured` (BOOLEAN) a la tabla `obras`
+- Índice para búsquedas rápidas de obras destacadas
+- Valor por defecto: `false`
+
+Esta columna permite marcar obras como destacadas para mostrarlas en la página de inicio (home).
+
+### 4. `migracion-categorias.sql`
 **Script de migración (opcional)**
 
 Solo ejecutar si tienes obras existentes con las categorías antiguas (`residencial`, `renovacion`).
@@ -51,9 +61,15 @@ Este script migra automáticamente:
    ```
    1. setup.sql
    2. categorias.sql
+   3. add-featured-column.sql
    ```
 
-2. **Si ya tienes datos y quieres migrar categorías:**
+2. **Si ya tienes datos y quieres agregar featured:**
+   ```
+   1. add-featured-column.sql
+   ```
+
+3. **Si ya tienes datos y quieres migrar categorías:**
    ```
    1. migracion-categorias.sql
    ```

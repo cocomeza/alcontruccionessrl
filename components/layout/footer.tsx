@@ -61,12 +61,12 @@ export function Footer() {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-3 text-white/80">
                 <MapPin className="h-5 w-5 text-morning-glory flex-shrink-0 mt-0.5" />
-                <span>Buenos Aires, Argentina</span>
+                <span>Ezeiza, Pcia de Bs As, Argentina</span>
               </li>
               <li className="flex items-center gap-3 text-white/80">
                 <Phone className="h-5 w-5 text-morning-glory flex-shrink-0" />
-                <a href="tel:+5491123456789" className="hover:text-white transition-colors">
-                  +54 9 11 2345-6789
+                <a href="tel:+541168653696" className="hover:text-white transition-colors">
+                  011 6865-3696
                 </a>
               </li>
               <li className="flex items-center gap-3 text-white/80">

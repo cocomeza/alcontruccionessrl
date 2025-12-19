@@ -16,14 +16,14 @@ const contactItems = [
   {
     icon: Phone,
     title: 'Teléfono',
-    content: '+54 9 11 2345-6789',
-    href: 'tel:+5491123456789',
+    content: '011 6865-3696',
+    href: 'tel:+541168653696',
     color: 'text-boston-blue',
   },
   {
     icon: MapPin,
     title: 'Ubicación',
-    content: 'Buenos Aires, Argentina',
+    content: 'Ezeiza, Pcia de Bs As, Argentina',
     href: null,
     color: 'text-boston-blue',
   },

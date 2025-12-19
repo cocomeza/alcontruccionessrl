@@ -101,7 +101,7 @@ export function ContactForm() {
           type="tel"
           {...register('phone')}
           disabled={isSubmitting}
-          placeholder="+54 9 11 2345-6789"
+          placeholder="011 6865-3696"
           className="h-11 focus-visible:ring-calypso"
         />
       </div>
