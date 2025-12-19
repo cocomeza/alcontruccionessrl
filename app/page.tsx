@@ -6,8 +6,13 @@ import { ObrasDestacadas } from '@/components/obra/obras-destacadas'
 import { SeccionesRapidas } from '@/components/home/secciones-rapidas'
 
 export const metadata = {
-  title: "ALCONSTRUCCIONES SRL - Inicio",
-  description: "Portfolio de obras de construcción de ALCONSTRUCCIONES SRL",
+  title: "Inicio",
+  description: "ALCONSTRUCCIONES SRL - Empresa líder en construcción de obras de calidad. Especialistas en viviendas, edificios, obras comerciales e industriales. Construyendo sueños con compromiso y excelencia desde 2020.",
+  openGraph: {
+    title: "ALCONSTRUCCIONES SRL - Construcción de Calidad",
+    description: "Empresa líder en construcción de obras de calidad. Especialistas en viviendas, edificios, obras comerciales e industriales.",
+    images: ["/logo.png"],
+  },
 };
 
 export default async function HomePage() {

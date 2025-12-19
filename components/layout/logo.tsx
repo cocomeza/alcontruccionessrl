@@ -20,6 +20,7 @@ export function Logo() {
         className="object-contain"
         priority
         fetchPriority="high"
+        sizes="(max-width: 640px) 40px, 48px"
         onError={() => setError(true)}
       />
     </div>

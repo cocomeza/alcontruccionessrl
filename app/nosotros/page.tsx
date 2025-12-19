@@ -9,8 +9,13 @@ import { NosotrosPorQue } from '@/components/nosotros/nosotros-porque'
 import { NosotrosEquipo } from '@/components/nosotros/nosotros-equipo'
 
 export const metadata = {
-  title: 'Nosotros - ALCONSTRUCCIONES SRL',
-  description: 'Conoce nuestra historia, valores y equipo profesional',
+  title: 'Nosotros',
+  description: 'Conoce nuestra historia, valores y equipo profesional. Construyendo sueños con calidad, compromiso y excelencia desde 2020.',
+  openGraph: {
+    title: 'Nosotros - ALCONSTRUCCIONES SRL',
+    description: 'Conoce nuestra historia, valores y equipo profesional. Construyendo sueños desde 2020.',
+    images: ["/logo.png"],
+  },
 }
 
 export default function NosotrosPage() {

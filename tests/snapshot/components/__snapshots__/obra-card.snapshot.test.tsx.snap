@@ -2,20 +2,21 @@
 
 exports[`ObraCard Snapshot > should match snapshot with category 1`] = `
 <div
+  class="h-full"
   style="opacity: 0; transform: translateY(20px);"
 >
   <a
-    href="/obra/1"
+    href="#"
   >
     <div
-      class="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer h-full"
+      class="rounded-lg border text-card-foreground shadow-sm overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer h-full group border-border/50 hover:border-calypso/50 bg-card"
     >
       <div
-        class="relative aspect-video w-full"
+        class="relative aspect-video w-full overflow-hidden"
       >
         <img
           alt="Casa Moderna"
-          class="object-cover"
+          class="object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
           data-nimg="fill"
           decoding="async"
           loading="eager"
@@ -24,29 +25,52 @@ exports[`ObraCard Snapshot > should match snapshot with category 1`] = `
           srcset="/_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=256&q=75 256w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=384&q=75 384w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=3840&q=75 3840w"
           style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
         />
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        />
+        <div
+          class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center"
+        >
+          <span
+            class="opacity-0 group-hover:opacity-100 text-white font-semibold transition-all duration-300 text-sm sm:text-base px-4 py-2 bg-calypso/90 backdrop-blur-sm rounded-lg shadow-xl"
+            style="opacity: 0; transform: translateY(10px);"
+          >
+            Ver galería
+          </span>
+        </div>
       </div>
       <div
-        class="p-6"
+        class="p-6 group-hover:bg-accent/5 transition-colors duration-300"
       >
         <div
-          class="flex items-start justify-between gap-2 mb-2"
+          class="flex items-start justify-between gap-2 mb-3"
         >
           <h2
-            class="text-xl font-semibold text-calypso flex-1"
+            class="text-xl font-bold text-calypso flex-1 group-hover:text-boston-blue transition-colors duration-300 line-clamp-2"
           >
             Casa Moderna
           </h2>
           <span
-            class="text-xs px-2 py-1 bg-calypso/10 text-calypso rounded-full whitespace-nowrap"
+            class="text-xs px-3 py-1.5 bg-calypso/10 text-calypso rounded-full whitespace-nowrap font-medium border border-calypso/20 group-hover:bg-calypso group-hover:text-white transition-colors duration-300"
           >
             Vivienda
           </span>
         </div>
         <p
-          class="text-muted-foreground line-clamp-3"
+          class="text-muted-foreground line-clamp-3 text-sm leading-relaxed group-hover:text-foreground/80 transition-colors duration-300"
         >
           Una hermosa casa moderna con diseño contemporáneo y grandes ventanales
         </p>
+        <div
+          class="mt-4 flex items-center gap-2 text-calypso text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        >
+          <span>
+            Ver detalles
+          </span>
+          <div>
+            →
+          </div>
+        </div>
       </div>
     </div>
   </a>
@@ -55,20 +79,21 @@ exports[`ObraCard Snapshot > should match snapshot with category 1`] = `
 
 exports[`ObraCard Snapshot > should match snapshot with image 1`] = `
 <div
+  class="h-full"
   style="opacity: 0; transform: translateY(20px);"
 >
   <a
-    href="/obra/1"
+    href="#"
   >
     <div
-      class="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer h-full"
+      class="rounded-lg border text-card-foreground shadow-sm overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer h-full group border-border/50 hover:border-calypso/50 bg-card"
     >
       <div
-        class="relative aspect-video w-full"
+        class="relative aspect-video w-full overflow-hidden"
       >
         <img
           alt="Casa Moderna"
-          class="object-cover"
+          class="object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
           data-nimg="fill"
           decoding="async"
           loading="eager"
@@ -77,29 +102,52 @@ exports[`ObraCard Snapshot > should match snapshot with image 1`] = `
           srcset="/_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=256&q=75 256w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=384&q=75 384w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=3840&q=75 3840w"
           style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
         />
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        />
+        <div
+          class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center"
+        >
+          <span
+            class="opacity-0 group-hover:opacity-100 text-white font-semibold transition-all duration-300 text-sm sm:text-base px-4 py-2 bg-calypso/90 backdrop-blur-sm rounded-lg shadow-xl"
+            style="opacity: 0; transform: translateY(10px);"
+          >
+            Ver galería
+          </span>
+        </div>
       </div>
       <div
-        class="p-6"
+        class="p-6 group-hover:bg-accent/5 transition-colors duration-300"
       >
         <div
-          class="flex items-start justify-between gap-2 mb-2"
+          class="flex items-start justify-between gap-2 mb-3"
         >
           <h2
-            class="text-xl font-semibold text-calypso flex-1"
+            class="text-xl font-bold text-calypso flex-1 group-hover:text-boston-blue transition-colors duration-300 line-clamp-2"
           >
             Casa Moderna
           </h2>
           <span
-            class="text-xs px-2 py-1 bg-calypso/10 text-calypso rounded-full whitespace-nowrap"
+            class="text-xs px-3 py-1.5 bg-calypso/10 text-calypso rounded-full whitespace-nowrap font-medium border border-calypso/20 group-hover:bg-calypso group-hover:text-white transition-colors duration-300"
           >
             Vivienda
           </span>
         </div>
         <p
-          class="text-muted-foreground line-clamp-3"
+          class="text-muted-foreground line-clamp-3 text-sm leading-relaxed group-hover:text-foreground/80 transition-colors duration-300"
         >
           Una hermosa casa moderna con diseño contemporáneo y grandes ventanales
         </p>
+        <div
+          class="mt-4 flex items-center gap-2 text-calypso text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        >
+          <span>
+            Ver detalles
+          </span>
+          <div>
+            →
+          </div>
+        </div>
       </div>
     </div>
   </a>
@@ -108,20 +156,21 @@ exports[`ObraCard Snapshot > should match snapshot with image 1`] = `
 
 exports[`ObraCard Snapshot > should match snapshot without category 1`] = `
 <div
+  class="h-full"
   style="opacity: 0; transform: translateY(20px);"
 >
   <a
-    href="/obra/1"
+    href="#"
   >
     <div
-      class="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer h-full"
+      class="rounded-lg border text-card-foreground shadow-sm overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer h-full group border-border/50 hover:border-calypso/50 bg-card"
     >
       <div
-        class="relative aspect-video w-full"
+        class="relative aspect-video w-full overflow-hidden"
       >
         <img
           alt="Casa Moderna"
-          class="object-cover"
+          class="object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
           data-nimg="fill"
           decoding="async"
           loading="eager"
@@ -130,24 +179,47 @@ exports[`ObraCard Snapshot > should match snapshot without category 1`] = `
           srcset="/_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=256&q=75 256w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=384&q=75 384w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fexample.com%2Fimage.jpg&w=3840&q=75 3840w"
           style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
         />
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        />
+        <div
+          class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center"
+        >
+          <span
+            class="opacity-0 group-hover:opacity-100 text-white font-semibold transition-all duration-300 text-sm sm:text-base px-4 py-2 bg-calypso/90 backdrop-blur-sm rounded-lg shadow-xl"
+            style="opacity: 0; transform: translateY(10px);"
+          >
+            Ver galería
+          </span>
+        </div>
       </div>
       <div
-        class="p-6"
+        class="p-6 group-hover:bg-accent/5 transition-colors duration-300"
       >
         <div
-          class="flex items-start justify-between gap-2 mb-2"
+          class="flex items-start justify-between gap-2 mb-3"
         >
           <h2
-            class="text-xl font-semibold text-calypso flex-1"
+            class="text-xl font-bold text-calypso flex-1 group-hover:text-boston-blue transition-colors duration-300 line-clamp-2"
           >
             Casa Moderna
           </h2>
         </div>
         <p
-          class="text-muted-foreground line-clamp-3"
+          class="text-muted-foreground line-clamp-3 text-sm leading-relaxed group-hover:text-foreground/80 transition-colors duration-300"
         >
           Una hermosa casa moderna con diseño contemporáneo y grandes ventanales
         </p>
+        <div
+          class="mt-4 flex items-center gap-2 text-calypso text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        >
+          <span>
+            Ver detalles
+          </span>
+          <div>
+            →
+          </div>
+        </div>
       </div>
     </div>
   </a>
@@ -156,13 +228,14 @@ exports[`ObraCard Snapshot > should match snapshot without category 1`] = `
 
 exports[`ObraCard Snapshot > should match snapshot without image 1`] = `
 <div
+  class="h-full"
   style="opacity: 0; transform: translateY(20px);"
 >
   <a
     href="/obra/1"
   >
     <div
-      class="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer h-full"
+      class="rounded-lg border text-card-foreground shadow-sm overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer h-full group border-border/50 hover:border-calypso/50 bg-card"
     >
       <div
         class="aspect-video bg-muted flex items-center justify-center"
@@ -174,27 +247,37 @@ exports[`ObraCard Snapshot > should match snapshot without image 1`] = `
         </p>
       </div>
       <div
-        class="p-6"
+        class="p-6 group-hover:bg-accent/5 transition-colors duration-300"
       >
         <div
-          class="flex items-start justify-between gap-2 mb-2"
+          class="flex items-start justify-between gap-2 mb-3"
         >
           <h2
-            class="text-xl font-semibold text-calypso flex-1"
+            class="text-xl font-bold text-calypso flex-1 group-hover:text-boston-blue transition-colors duration-300 line-clamp-2"
           >
             Casa Moderna
           </h2>
           <span
-            class="text-xs px-2 py-1 bg-calypso/10 text-calypso rounded-full whitespace-nowrap"
+            class="text-xs px-3 py-1.5 bg-calypso/10 text-calypso rounded-full whitespace-nowrap font-medium border border-calypso/20 group-hover:bg-calypso group-hover:text-white transition-colors duration-300"
           >
             Vivienda
           </span>
         </div>
         <p
-          class="text-muted-foreground line-clamp-3"
+          class="text-muted-foreground line-clamp-3 text-sm leading-relaxed group-hover:text-foreground/80 transition-colors duration-300"
         >
           Una hermosa casa moderna con diseño contemporáneo y grandes ventanales
         </p>
+        <div
+          class="mt-4 flex items-center gap-2 text-calypso text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        >
+          <span>
+            Ver detalles
+          </span>
+          <div>
+            →
+          </div>
+        </div>
       </div>
     </div>
   </a>

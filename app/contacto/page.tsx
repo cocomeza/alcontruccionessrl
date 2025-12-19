@@ -1,14 +1,16 @@
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
-import { ContactForm } from '@/components/contact/contact-form'
-import { Card, CardContent } from '@/components/ui/card'
-import { Mail, MapPin, Clock, Phone } from 'lucide-react'
 import { ContactHero } from '@/components/contact/contact-hero'
 import { ContactInfo } from '@/components/contact/contact-info'
 
 export const metadata = {
-  title: 'Contacto - ALCONSTRUCCIONES SRL',
-  description: 'Contáctanos para tu próximo proyecto de construcción',
+  title: 'Contacto',
+  description: 'Contáctanos para tu próximo proyecto de construcción. Estamos aquí para ayudarte a hacer realidad tus sueños con calidad y compromiso.',
+  openGraph: {
+    title: 'Contacto - ALCONSTRUCCIONES SRL',
+    description: 'Contáctanos para tu próximo proyecto de construcción. Estamos aquí para ayudarte.',
+    images: ["/logo.png"],
+  },
 }
 
 export default function ContactoPage() {
@@ -19,19 +21,8 @@ export default function ContactoPage() {
         <ContactHero />
 
         <div className="container mx-auto px-4 py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Información de Contacto */}
+          <div className="max-w-4xl mx-auto">
             <ContactInfo />
-
-            {/* Formulario de Contacto */}
-            <div>
-              <Card>
-                <CardContent className="p-6">
-                  <h2 className="text-2xl font-bold text-calypso mb-6">Envíanos un Mensaje</h2>
-                  <ContactForm />
-                </CardContent>
-              </Card>
-            </div>
           </div>
         </div>
       </main>

@@ -1,65 +1,96 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { ScrollAnimation } from '@/components/common/scroll-animation'
 import { Card, CardContent } from '@/components/ui/card'
 import { Mail, MapPin, Clock, Phone } from 'lucide-react'
+import { motion } from 'framer-motion'
+
+const contactItems = [
+  {
+    icon: Mail,
+    title: 'Email',
+    content: 'contacto.alconstrucciones@gmail.com',
+    href: 'mailto:contacto.alconstrucciones@gmail.com',
+    color: 'text-boston-blue',
+  },
+  {
+    icon: Phone,
+    title: 'Teléfono',
+    content: '+54 9 11 2345-6789',
+    href: 'tel:+5491123456789',
+    color: 'text-boston-blue',
+  },
+  {
+    icon: MapPin,
+    title: 'Ubicación',
+    content: 'Buenos Aires, Argentina',
+    href: null,
+    color: 'text-boston-blue',
+  },
+  {
+    icon: Clock,
+    title: 'Horarios',
+    content: (
+      <div className="space-y-1">
+        <p>Lunes - Viernes: 8:00 - 18:00</p>
+        <p>Sábados: 9:00 - 13:00</p>
+        <p>Domingos: Cerrado</p>
+      </div>
+    ),
+    href: null,
+    color: 'text-boston-blue',
+  },
+]
 
 export function ContactInfo() {
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      className="space-y-6"
-    >
-      <Card>
-        <CardContent className="p-6">
-          <h2 className="text-2xl font-bold text-calypso mb-6">Información de Contacto</h2>
-          
-          <div className="space-y-4">
-            <div className="flex items-start gap-4">
-              <Mail className="h-6 w-6 text-boston-blue mt-1" />
-              <div>
-                <h3 className="font-semibold text-calypso mb-1">Email</h3>
-                <a href="mailto:contacto@alconstrucciones.com" className="text-muted-foreground hover:text-boston-blue transition-colors">
-                  contacto@alconstrucciones.com
-                </a>
-              </div>
+    <div className="space-y-6">
+      <ScrollAnimation direction="left" delay={0.1}>
+        <Card className="border-border/50 shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <CardContent className="p-6 sm:p-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-calypso mb-8">Información de Contacto</h2>
+            
+            <div className="space-y-6">
+              {contactItems.map((item, index) => {
+                const Icon = item.icon
+                const Component = item.href ? motion.a : motion.div
+                
+                return (
+                  <motion.div
+                    key={item.title}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ x: 4 }}
+                  >
+                    <Component
+                      href={item.href || undefined}
+                      className={`flex items-start gap-4 p-4 rounded-lg hover:bg-accent/50 transition-colors ${item.href ? 'cursor-pointer' : ''}`}
+                    >
+                      <div className={`p-3 bg-${item.color.replace('text-', '')}/10 rounded-lg flex-shrink-0`}>
+                        <Icon className={`h-6 w-6 ${item.color}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-calypso mb-1.5 text-base">{item.title}</h3>
+                        {typeof item.content === 'string' ? (
+                          <p className="text-muted-foreground hover:text-boston-blue transition-colors text-sm sm:text-base">
+                            {item.content}
+                          </p>
+                        ) : (
+                          <div className="text-muted-foreground text-sm sm:text-base">
+                            {item.content}
+                          </div>
+                        )}
+                      </div>
+                    </Component>
+                  </motion.div>
+                )
+              })}
             </div>
-
-            <div className="flex items-start gap-4">
-              <Phone className="h-6 w-6 text-boston-blue mt-1" />
-              <div>
-                <h3 className="font-semibold text-calypso mb-1">Teléfono</h3>
-                <a href="tel:+5491123456789" className="text-muted-foreground hover:text-boston-blue transition-colors">
-                  +54 9 11 2345-6789
-                </a>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <MapPin className="h-6 w-6 text-boston-blue mt-1" />
-              <div>
-                <h3 className="font-semibold text-calypso mb-1">Ubicación</h3>
-                <p className="text-muted-foreground">
-                  Buenos Aires, Argentina
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <Clock className="h-6 w-6 text-boston-blue mt-1" />
-              <div>
-                <h3 className="font-semibold text-calypso mb-1">Horarios</h3>
-                <div className="text-muted-foreground space-y-1">
-                  <p>Lunes - Viernes: 8:00 - 18:00</p>
-                  <p>Sábados: 9:00 - 13:00</p>
-                  <p>Domingos: Cerrado</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </ScrollAnimation>
 
       {/* Mapa */}
       <Card className="mx-2 sm:mx-0">
@@ -84,7 +115,7 @@ export function ContactInfo() {
           </div>
         </CardContent>
       </Card>
-    </motion.div>
+    </div>
   )
 }
 

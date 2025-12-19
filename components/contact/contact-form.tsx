@@ -4,12 +4,14 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { sendContactEmail } from '@/lib/actions/contact'
 import { toast } from 'sonner'
+import { ScrollAnimation } from '@/components/common/scroll-animation'
 
 const contactSchema = z.object({
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
@@ -43,75 +45,132 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <ScrollAnimation direction="right" delay={0.2}>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="name">Nombre *</Label>
+        <Label htmlFor="name" className="text-base font-semibold text-calypso">
+          Nombre *
+        </Label>
         <Input
           id="name"
           {...register('name')}
           disabled={isSubmitting}
-          className={errors.name ? 'border-destructive' : ''}
+          placeholder="Tu nombre completo"
+          className={`h-11 ${errors.name ? 'border-destructive focus-visible:ring-destructive' : 'focus-visible:ring-calypso'}`}
         />
         {errors.name && (
-          <p className="text-sm text-destructive">{errors.name.message}</p>
+          <motion.p 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-sm text-destructive flex items-center gap-1"
+          >
+            {errors.name.message}
+          </motion.p>
         )}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email *</Label>
+        <Label htmlFor="email" className="text-base font-semibold text-calypso">
+          Email *
+        </Label>
         <Input
           id="email"
           type="email"
           {...register('email')}
           disabled={isSubmitting}
-          className={errors.email ? 'border-destructive' : ''}
+          placeholder="tu@email.com"
+          className={`h-11 ${errors.email ? 'border-destructive focus-visible:ring-destructive' : 'focus-visible:ring-calypso'}`}
         />
         {errors.email && (
-          <p className="text-sm text-destructive">{errors.email.message}</p>
+          <motion.p 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-sm text-destructive flex items-center gap-1"
+          >
+            {errors.email.message}
+          </motion.p>
         )}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="phone">Teléfono (opcional)</Label>
+        <Label htmlFor="phone" className="text-base font-semibold text-calypso">
+          Teléfono <span className="text-muted-foreground font-normal">(opcional)</span>
+        </Label>
         <Input
           id="phone"
           type="tel"
           {...register('phone')}
           disabled={isSubmitting}
+          placeholder="+54 9 11 2345-6789"
+          className="h-11 focus-visible:ring-calypso"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="subject">Asunto *</Label>
+        <Label htmlFor="subject" className="text-base font-semibold text-calypso">
+          Asunto *
+        </Label>
         <Input
           id="subject"
           {...register('subject')}
           disabled={isSubmitting}
-          className={errors.subject ? 'border-destructive' : ''}
+          placeholder="¿En qué podemos ayudarte?"
+          className={`h-11 ${errors.subject ? 'border-destructive focus-visible:ring-destructive' : 'focus-visible:ring-calypso'}`}
         />
         {errors.subject && (
-          <p className="text-sm text-destructive">{errors.subject.message}</p>
+          <motion.p 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-sm text-destructive flex items-center gap-1"
+          >
+            {errors.subject.message}
+          </motion.p>
         )}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="message">Mensaje *</Label>
+        <Label htmlFor="message" className="text-base font-semibold text-calypso">
+          Mensaje *
+        </Label>
         <Textarea
           id="message"
           {...register('message')}
           disabled={isSubmitting}
-          rows={5}
-          className={errors.message ? 'border-destructive' : ''}
+          rows={6}
+          placeholder="Cuéntanos sobre tu proyecto..."
+          className={`resize-none ${errors.message ? 'border-destructive focus-visible:ring-destructive' : 'focus-visible:ring-calypso'}`}
         />
         {errors.message && (
-          <p className="text-sm text-destructive">{errors.message.message}</p>
+          <motion.p 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-sm text-destructive flex items-center gap-1"
+          >
+            {errors.message.message}
+          </motion.p>
         )}
       </div>
 
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
-        {isSubmitting ? 'Enviando...' : 'Enviar Mensaje'}
+      <Button 
+        type="submit" 
+        className="w-full h-12 text-base font-semibold bg-calypso hover:bg-boston-blue transition-all duration-300 shadow-lg hover:shadow-xl" 
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <span className="flex items-center gap-2">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+            />
+            Enviando...
+          </span>
+        ) : (
+          'Enviar Mensaje'
+        )}
       </Button>
     </form>
+    </ScrollAnimation>
   )
 }
 

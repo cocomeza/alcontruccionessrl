@@ -9,8 +9,13 @@ import { ObraCard } from '@/components/obra/obra-card'
 import { Suspense } from 'react'
 
 export const metadata = {
-  title: 'Portfolio de Obras - ALCONSTRUCCIONES SRL',
-  description: 'Explora nuestro portfolio de obras de construcción',
+  title: 'Portfolio de Obras',
+  description: 'Explora nuestro portfolio completo de obras de construcción. Viviendas, edificios, obras comerciales e industriales realizadas con calidad y compromiso.',
+  openGraph: {
+    title: 'Portfolio de Obras - ALCONSTRUCCIONES SRL',
+    description: 'Explora nuestro portfolio completo de obras de construcción realizadas con calidad y compromiso.',
+    images: ["/logo.png"],
+  },
 }
 
 const ITEMS_PER_PAGE = 9

@@ -6,6 +6,23 @@ import { Footer } from '@/components/layout/footer'
 vi.mock('lucide-react', () => ({
   Facebook: () => <svg data-testid="facebook-icon" />,
   Instagram: () => <svg data-testid="instagram-icon" />,
+  Building2: () => <svg data-testid="building-icon" />,
+  Mail: () => <svg data-testid="mail-icon" />,
+  MapPin: () => <svg data-testid="mappin-icon" />,
+  Phone: () => <svg data-testid="phone-icon" />,
+}))
+
+// Mock ScrollAnimation to avoid IntersectionObserver issues
+vi.mock('@/components/common/scroll-animation', () => ({
+  ScrollAnimation: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}))
+
+// Mock framer-motion
+vi.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    a: ({ children, ...props }: any) => <a {...props}>{children}</a>,
+  },
 }))
 
 describe('Footer', () => {
@@ -18,7 +35,7 @@ describe('Footer', () => {
   it('should render company tagline', () => {
     render(<Footer />)
     
-    expect(screen.getByText('Construyendo sueños con calidad y compromiso')).toBeInTheDocument()
+    expect(screen.getByText(/Construyendo sueños con calidad/i)).toBeInTheDocument()
   })
 
   it('should render Facebook link', () => {
@@ -76,7 +93,7 @@ describe('Footer', () => {
     const { container } = render(<Footer />)
     
     const footer = container.querySelector('footer')
-    expect(footer).toHaveClass('bg-calypso', 'dark:bg-calypso/90', 'text-white')
+    expect(footer).toHaveClass('bg-gradient-to-br', 'from-calypso', 'to-boston-blue', 'text-white')
   })
 
   it('should render social media icons', () => {
