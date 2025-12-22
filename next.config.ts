@@ -17,8 +17,6 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Enable React strict mode
   reactStrictMode: true,
-  // Optimize fonts
-  optimizeFonts: true,
 }
 
 export default nextConfig
