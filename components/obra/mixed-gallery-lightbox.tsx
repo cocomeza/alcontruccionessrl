@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
 import { isSupabaseUrl } from '@/lib/utils/storage'
 import { VideoPlayer } from './video-player'
+import { VideoPlayerSimple } from './video-player-simple'
 
 interface MediaItem {
   type: 'image' | 'video'
@@ -240,7 +241,7 @@ export function MixedGalleryLightbox({
                   </div>
                 ) : currentItem.type === 'video' ? (
                   <div className="aspect-video w-full max-w-6xl bg-black rounded-lg overflow-hidden shadow-2xl relative">
-                    <VideoPlayer
+                    <VideoPlayerSimple
                       src={currentItem.url}
                       onPlay={handleVideoPlay}
                       onPause={handleVideoPause}
@@ -255,7 +256,6 @@ export function MixedGalleryLightbox({
                         }
                       }}
                       className="w-full h-full"
-                      showControls={true}
                       autoPlay={false}
                     />
                   </div>

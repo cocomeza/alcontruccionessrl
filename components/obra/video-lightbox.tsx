@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
 import { isSupabaseUrl } from '@/lib/utils/storage'
 import { VideoPlayer } from './video-player'
+import { VideoPlayerSimple } from './video-player-simple'
 
 interface VideoLightboxProps {
   videos: string[]
@@ -112,7 +113,7 @@ export function VideoLightbox({ videos, initialIndex = 0, onClose, title }: Vide
             className="relative max-w-full max-h-full"
           >
             <div className="aspect-video w-full max-w-6xl bg-black relative">
-              <VideoPlayer
+              <VideoPlayerSimple
                 src={videos[currentIndex]}
                 onPlay={handleVideoPlay}
                 onPause={handleVideoPause}
@@ -127,7 +128,6 @@ export function VideoLightbox({ videos, initialIndex = 0, onClose, title }: Vide
                   }
                 }}
                 className="w-full h-full"
-                showControls={true}
               />
             </div>
           </motion.div>
