@@ -39,11 +39,16 @@ export function VideoPlayerSimple({
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Formatear tiempo
+  // Formatear tiempo - mejorado para mostrar horas si es necesario
   const formatTime = useCallback((seconds: number): string => {
-    if (isNaN(seconds) || !isFinite(seconds)) return '0:00'
-    const mins = Math.floor(seconds / 60)
+    if (isNaN(seconds) || !isFinite(seconds) || seconds < 0) return '0:00'
+    const hours = Math.floor(seconds / 3600)
+    const mins = Math.floor((seconds % 3600) / 60)
     const secs = Math.floor(seconds % 60)
+    
+    if (hours > 0) {
+      return `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+    }
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }, [])
 
@@ -80,9 +85,22 @@ export function VideoPlayerSimple({
   // Cargar metadata
   const handleLoadedMetadata = useCallback(() => {
     if (!videoRef.current) return
-    setDuration(videoRef.current.duration)
+    const videoDuration = videoRef.current.duration
+    if (videoDuration && isFinite(videoDuration) && videoDuration > 0) {
+      setDuration(videoDuration)
+    }
     setIsLoading(false)
   }, [])
+
+  // También intentar cargar duración cuando hay datos disponibles
+  const handleLoadedData = useCallback(() => {
+    if (!videoRef.current) return
+    const videoDuration = videoRef.current.duration
+    if (videoDuration && isFinite(videoDuration) && videoDuration > 0 && duration === 0) {
+      setDuration(videoDuration)
+    }
+    setIsLoading(false)
+  }, [duration])
 
   // Manejar error
   const handleError = useCallback(() => {
@@ -210,6 +228,14 @@ export function VideoPlayerSimple({
         crossOrigin="anonymous"
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
+        onLoadedData={handleLoadedData}
+        onCanPlay={() => {
+          if (!videoRef.current) return
+          const videoDuration = videoRef.current.duration
+          if (videoDuration && isFinite(videoDuration) && videoDuration > 0 && duration === 0) {
+            setDuration(videoDuration)
+          }
+        }}
         onError={handleError}
         onEnded={handleEnded}
         onClick={togglePlay}
@@ -308,11 +334,14 @@ export function VideoPlayerSimple({
               )}
             </Button>
 
-            {/* Tiempo - TEXTO GRANDE */}
-            <div className="text-white text-base font-semibold flex items-center gap-2 min-w-[120px]">
-              <span>{formatTime(currentTime)}</span>
-              <span className="text-white/60">/</span>
-              <span className="text-white/60">{formatTime(duration)}</span>
+            {/* Tiempo - TEXTO GRANDE Y CLARO */}
+            <div className="text-white text-base font-semibold flex items-center gap-2 min-w-[140px]">
+              <span className="text-white">{formatTime(currentTime)}</span>
+              <span className="text-white/70">/</span>
+              <span className="text-white/90 font-bold">{formatTime(duration)}</span>
+              {duration === 0 && (
+                <span className="text-white/50 text-xs">Cargando...</span>
+              )}
             </div>
           </div>
 
