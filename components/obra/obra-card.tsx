@@ -44,12 +44,14 @@ export function ObraCard({ obra, index }: ObraCardProps) {
       videosCount: videos.length,
       imageError,
       videoError,
-      images,
-      videos,
+      images: images.slice(0, 2), // Solo primeros 2 para no saturar
+      videos: videos.slice(0, 2), // Solo primeros 2 para no saturar
       imagesType: typeof obra.images,
       videosType: typeof obra.videos,
       isImagesArray: Array.isArray(obra.images),
       isVideosArray: Array.isArray(obra.videos),
+      rawObraImages: obra.images,
+      rawObraVideos: obra.videos,
     })
   }
 

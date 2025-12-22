@@ -6,12 +6,36 @@ import { revalidatePath } from 'next/cache'
 
 /**
  * Normaliza arrays de imágenes y videos para asegurar que siempre sean arrays
+ * También verifica que las URLs de videos no estén en el campo de imágenes
  */
 function normalizeObraData(obra: any) {
+  let images = Array.isArray(obra.images) ? obra.images : (obra.images ? [obra.images] : [])
+  let videos = Array.isArray(obra.videos) ? obra.videos : (obra.videos ? [obra.videos] : [])
+  
+  // Verificar si hay videos en el campo de imágenes (corrección de datos corruptos)
+  const videoUrls = ['video', '.mp4', '.webm', '.ogg']
+  const videosInImages = images.filter((url: string) => 
+    videoUrls.some(ext => url.toLowerCase().includes(ext))
+  )
+  
+  if (videosInImages.length > 0) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('⚠️ Detectados videos en el campo de imágenes, corrigiendo...', {
+        obraId: obra.id,
+        videosEncontrados: videosInImages,
+      })
+    }
+    // Mover videos del campo de imágenes al campo de videos
+    videos = [...videos, ...videosInImages]
+    images = images.filter((url: string) => 
+      !videoUrls.some(ext => url.toLowerCase().includes(ext))
+    )
+  }
+  
   return {
     ...obra,
-    images: Array.isArray(obra.images) ? obra.images : (obra.images ? [obra.images] : []),
-    videos: Array.isArray(obra.videos) ? obra.videos : (obra.videos ? [obra.videos] : []),
+    images,
+    videos,
   }
 }
 

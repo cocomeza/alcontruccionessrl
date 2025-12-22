@@ -33,10 +33,27 @@ export function MixedGalleryLightbox({
   description,
 }: MixedGalleryLightboxProps) {
   // Combinar imágenes y videos en un solo array (usando useMemo para evitar recrear en cada render)
-  const mediaItems: MediaItem[] = useMemo(() => [
-    ...images.map((url) => ({ type: 'image' as const, url })),
-    ...videos.map((url) => ({ type: 'video' as const, url })),
-  ], [images, videos])
+  const mediaItems: MediaItem[] = useMemo(() => {
+    const items: MediaItem[] = [
+      ...images.map((url) => ({ type: 'image' as const, url })),
+      ...videos.map((url) => ({ type: 'video' as const, url })),
+    ]
+    
+    // Debug en desarrollo
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔍 MixedGalleryLightbox Debug:', {
+        imagesCount: images.length,
+        videosCount: videos.length,
+        totalItems: items.length,
+        videoItems: items.filter(item => item.type === 'video').length,
+        imageItems: items.filter(item => item.type === 'image').length,
+        videos: videos.slice(0, 2),
+        images: images.slice(0, 2),
+      })
+    }
+    
+    return items
+  }, [images, videos])
 
   const [currentIndex, setCurrentIndex] = useState(() => {
     if (initialType === 'image') {
@@ -108,6 +125,16 @@ export function MixedGalleryLightbox({
   if (mediaItems.length === 0) return null
 
   const currentItem = mediaItems[currentIndex]
+  
+  // Debug en desarrollo
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🔍 MixedGalleryLightbox Current Item:', {
+      currentIndex,
+      currentItemType: currentItem?.type,
+      currentItemUrl: currentItem?.url,
+      totalItems: mediaItems.length,
+    })
+  }
 
   return (
     <AnimatePresence>
@@ -211,7 +238,7 @@ export function MixedGalleryLightbox({
                       }}
                     />
                   </div>
-                ) : (
+                ) : currentItem.type === 'video' ? (
                   <div className="aspect-video w-full max-w-6xl bg-black rounded-lg overflow-hidden shadow-2xl relative">
                     <VideoPlayer
                       src={currentItem.url}
@@ -223,12 +250,18 @@ export function MixedGalleryLightbox({
                             index: currentIndex,
                             url: currentItem.url,
                             error,
+                            itemType: currentItem.type,
                           })
                         }
                       }}
                       className="w-full h-full"
                       showControls={true}
+                      autoPlay={false}
                     />
+                  </div>
+                ) : (
+                  <div className="relative max-w-full max-h-[85vh]">
+                    <p className="text-white">Tipo de media desconocido: {currentItem?.type}</p>
                   </div>
                 )}
               </motion.div>
