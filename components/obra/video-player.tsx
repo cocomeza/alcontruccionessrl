@@ -257,12 +257,21 @@ export function VideoPlayer({
     }
   }, [showControls, togglePlay])
 
-  // Manejar movimiento del mouse
+  // Manejar movimiento del mouse - mostrar controles siempre que el mouse se mueva
   const handleMouseMove = useCallback(() => {
     if (showControls) {
       setShowControlsOverlay(true)
+      // Resetear el timeout para que los controles se mantengan visibles mientras el mouse está sobre el video
+      if (controlsTimeoutRef.current) {
+        clearTimeout(controlsTimeoutRef.current)
+      }
+      if (isPlaying) {
+        controlsTimeoutRef.current = setTimeout(() => {
+          setShowControlsOverlay(false)
+        }, 3000)
+      }
     }
-  }, [showControls])
+  }, [showControls, isPlaying])
 
   // Sincronizar volumen con el video
   useEffect(() => {
@@ -291,10 +300,26 @@ export function VideoPlayer({
       ref={containerRef}
       className={cn('relative w-full h-full bg-black rounded-lg overflow-hidden group', className)}
       onMouseMove={handleMouseMove}
-      onMouseLeave={() => {
-        if (isPlaying && showControls) {
-          setTimeout(() => setShowControlsOverlay(false), 2000)
+      onMouseEnter={() => {
+        // Mostrar controles cuando el mouse entra al área del video
+        if (showControls) {
+          setShowControlsOverlay(true)
+          // Cancelar cualquier timeout de ocultar controles
+          if (controlsTimeoutRef.current) {
+            clearTimeout(controlsTimeoutRef.current)
+            controlsTimeoutRef.current = undefined
+          }
         }
+      }}
+      onMouseLeave={() => {
+        // Ocultar controles solo cuando el mouse sale Y el video está reproduciéndose
+        // Si está pausado, mantener los controles visibles
+        if (isPlaying && showControls) {
+          controlsTimeoutRef.current = setTimeout(() => {
+            setShowControlsOverlay(false)
+          }, 2000)
+        }
+        // Si está pausado, mantener controles visibles (no hacer nada)
       }}
     >
       {/* Video */}
@@ -515,8 +540,8 @@ export function VideoPlayer({
         )}
       </AnimatePresence>
 
-      {/* Overlay de play central (cuando está pausado) */}
-      {!isPlaying && !showControlsOverlay && (
+      {/* Overlay de play central (cuando está pausado y controles ocultos) */}
+      {!isPlaying && !showControlsOverlay && showControls && (
         <div
           className="absolute inset-0 flex items-center justify-center z-10 cursor-pointer"
           onClick={handleVideoClick}
