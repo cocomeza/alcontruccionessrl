@@ -8,6 +8,12 @@ Tests end-to-end para verificar el funcionamiento completo de la aplicación.
 
 Para ejecutar los tests que requieren autenticación, configura las siguientes variables de entorno:
 
+**Variables requeridas para tests de video upload:**
+- `TEST_ADMIN_EMAIL`: Email del usuario administrador
+- `TEST_ADMIN_PASSWORD`: Contraseña del usuario administrador
+- `NEXT_PUBLIC_SUPABASE_URL`: URL de tu proyecto Supabase
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Clave anónima de Supabase
+
 ```bash
 # Windows PowerShell
 $env:TEST_ADMIN_EMAIL="tu-email@ejemplo.com"
@@ -49,10 +55,17 @@ npm run test:e2e:ui
 npx playwright test tests/e2e/login-flow.spec.ts
 ```
 
+### Test específico de subida de videos
+
+```bash
+npx playwright test tests/e2e/video-upload.spec.ts
+```
+
 ### Test específico con UI
 
 ```bash
 npx playwright test tests/e2e/login-flow.spec.ts --ui
+npx playwright test tests/e2e/video-upload.spec.ts --ui
 ```
 
 ## Tests Disponibles
@@ -82,6 +95,18 @@ Tests de la vista pública de obras
 
 ### `upload.spec.ts`
 Tests de subida de archivos
+
+### `video-upload.spec.ts` ⭐ **NUEVO**
+Tests completos de subida de videos:
+- ✅ Subida de video a Supabase Storage
+- ✅ Guardado de URLs de videos en base de datos
+- ✅ Subida de múltiples videos
+- ✅ Validación de tamaño de archivo (máx 50MB)
+- ✅ Validación de tipo de archivo (MP4, WebM, OGG)
+- ✅ Manejo de errores de red
+- ✅ Persistencia de videos después de crear obra
+- ✅ Accesibilidad de videos en página pública
+- ✅ Verificación de estructura de array en base de datos
 
 ## Solución de Problemas
 

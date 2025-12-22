@@ -46,8 +46,9 @@ export function ObraFormImproved({ obra }: ObraFormProps) {
     // Asegurar que images y videos siempre sean arrays
     const obraData = {
       ...data,
-      images: data.images || [],
-      videos: data.videos || [],
+      images: Array.isArray(data.images) ? data.images : (data.images ? [data.images] : []),
+      videos: Array.isArray(data.videos) ? data.videos : (data.videos ? [data.videos] : []),
+      // category ya está transformado por el schema ('' -> undefined)
     }
 
     // Debug logging en desarrollo

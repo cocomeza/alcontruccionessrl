@@ -1,4 +1,10 @@
 import { defineConfig, devices } from '@playwright/test'
+import { config } from 'dotenv'
+import { resolve } from 'path'
+
+// Cargar variables de entorno desde .env.test.local si existe
+const envPath = resolve(__dirname, '.env.test.local')
+config({ path: envPath })
 
 export default defineConfig({
   testDir: './tests/e2e',

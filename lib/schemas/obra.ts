@@ -11,7 +11,11 @@ export const obraSchema = z.object({
     .max(2000, 'La descripción no puede exceder 2000 caracteres'),
   images: z.array(z.string().url('URL de imagen inválida')).default([]),
   videos: z.array(z.string().url('URL de video inválida')).default([]),
-  category: z.enum(['vivienda', 'edificios-altura', 'comercial', 'industrial', 'obra-publica', 'infraestructura', 'refaccion', 'ampliacion', 'otros']).optional(),
+  category: z
+    .enum(['vivienda', 'edificios-altura', 'comercial', 'industrial', 'obra-publica', 'infraestructura', 'refaccion', 'ampliacion', 'otros'])
+    .or(z.literal(''))
+    .transform((val) => val === '' ? undefined : val)
+    .optional(),
   featured: z.boolean().default(false).optional(),
 })
 
@@ -23,4 +27,3 @@ export const loginSchema = z.object({
 })
 
 export type LoginFormData = z.infer<typeof loginSchema>
-
